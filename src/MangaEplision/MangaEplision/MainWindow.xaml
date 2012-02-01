@@ -1,0 +1,43 @@
+﻿<metro:MetroWindow x:Class="MangaEplision.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:metro="clr-namespace:MangaEplision.Metro"
+        xmlns:me="clr-namespace:MangaEplision"
+        Title="MangaEplision" Height="612" Width="853" WindowStartupLocation="CenterScreen" Background="AliceBlue">
+    <!--<metro:MetroWindow.Background>
+        <RadialGradientBrush>
+            <GradientStop Color="AliceBlue" Offset="0"/>
+            <GradientStop Color="LightBlue" Offset="0.9"/>
+        </RadialGradientBrush>
+    </metro:MetroWindow.Background>-->
+    <Grid>
+        <metro:MetroTabControl x:Name="metroTabControl1">
+            <metro:MetroTabItem Header="Dashboard">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="679" />
+                        <ColumnDefinition Width="152" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <metro:MetroGroupBox Margin="6" x:Name="metroGroupBox1" Header="Catalog" NotificationsCount="10">
+                            <ListBox Background="Transparent" Name="CatalogListBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" Height="490">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <ContentPresenter Content="{Binding}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </metro:MetroGroupBox>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <metro:MetroTile HorizontalAlignment="Left" Margin="21,18,0,0" x:Name="viewInfoTile" VerticalAlignment="Top" Height="96" Width="123" IsNumbersEnabled="False" Header="View Info" Background="Blue" Click="viewInfoTile_Click"/>
+                        <metro:MetroTile HorizontalAlignment="Left" Margin="21,139,0,0" x:Name="searchTile" VerticalAlignment="Top" Height="95" Width="123" IsNumbersEnabled="False" Header="Search" Background="Red"/>
+                        <metro:MetroTile Height="95" HorizontalAlignment="Left" Margin="21,266,0,0" x:Name="refreshTile" VerticalAlignment="Top" Width="123" IsNumbersEnabled="False" Header="Refresh" Background="Orange"/>
+                    </Grid>
+                </Grid>
+            </metro:MetroTabItem>
+            <metro:MetroTabItem Header="Collection">
+            </metro:MetroTabItem>
+        </metro:MetroTabControl>
+    </Grid>
+</metro:MetroWindow>
