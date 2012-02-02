@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Media.Effects;
 
 namespace MangaEplision
 {
@@ -22,13 +23,8 @@ namespace MangaEplision
         public MangaInfoControl(MangaEplision.Base.Manga info)
         {
             InitializeComponent();
-            textBlock1.Text = info.Description;
 
-            label1.Content = info.MangaName;
-            label2.Content = "Author(s): " + info.Author;
-            label3.Content = "Start Release: " + info.StartRelease.ToString();
-
-            this.Background = new ImageBrush(info.BookImage);
+            this.DataContext = info;            
         }
     }
 }

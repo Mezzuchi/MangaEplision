@@ -29,15 +29,45 @@ namespace MangaEplision
             this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
             this.StateChanged += new EventHandler(MainWindow_StateChanged);
 
-           
+            winState = System.Windows.WindowState.Normal;
+            winNormalCTLBSize = CatalogListBox.Height;
+
+            winMaxCTLBSize = metroTabControl1.ActualHeight + 100;
         }
 
+        private WindowState winState;
+        private double winNormalCTLBSize = 0;
+        private double winMaxCTLBSize = 0;
         void MainWindow_StateChanged(object sender, EventArgs e)
         {
             if (this.WindowState == System.Windows.WindowState.Normal)
-                CatalogListBox.Height = metroTabControl1.ActualHeight - 300;
+            {
+                CatalogListBox.Height = winNormalCTLBSize;
+
+                winState = System.Windows.WindowState.Normal;
+            }
             else if (this.WindowState == System.Windows.WindowState.Maximized)
-                CatalogListBox.Height = metroTabControl1.ActualHeight + 100;
+            {
+                CatalogListBox.Height = winMaxCTLBSize;
+
+                winState = System.Windows.WindowState.Maximized;
+            }
+            else
+            {
+                if (winState == System.Windows.WindowState.Normal)
+                {
+                    CatalogListBox.Height = metroTabControl1.ActualHeight - 300;
+
+                    winState = System.Windows.WindowState.Normal;
+                }
+                else if (winState == System.Windows.WindowState.Maximized)
+                {
+                    CatalogListBox.Height = metroTabControl1.ActualHeight + 100;
+
+                    winState = System.Windows.WindowState.Maximized;
+                }
+            }
+
         }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)

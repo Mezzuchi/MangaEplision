@@ -99,8 +99,9 @@ namespace MangaEplision.Sources.MangaReader
 
             string html = GetHtml("http://www.mangareader.net/alphabetical");
             string important = "";
-            important = html.Substring(Regex.Match(html, "<div class=\"series_col\">").Index);
-
+            important = html.Substring(Regex.Match(html, "<div class=\"content_bloc2\">",RegexOptions.Singleline).Index);
+            important = important.Substring(Regex.Match(important, "<div class=\"series_col\">", RegexOptions.Singleline).Index);
+            important = important.Substring(0, Regex.Match(important, "<div id=\"adfooter\">", RegexOptions.Singleline).Index);
 
             foreach (Match m in Regex.Matches(important, "<li>.+?</li>"))
             {

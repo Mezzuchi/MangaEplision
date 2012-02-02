@@ -6,13 +6,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="418" d:DesignWidth="581" Background="Transparent" >
     <Grid>
-        <Label Content="Label" Height="52" Margin="12,12,12,0" Name="label1" VerticalAlignment="Top" FontSize="25" FontFamily="Segoe UI" Background="Transparent" />
-        <TextBlock Margin="12,65,229,12" Name="textBlock1" Text="TextBlock" Background="Transparent" TextWrapping="Wrap" FontSize="15" />
-        <GroupBox Header="Info" HorizontalAlignment="Right" Margin="0,65,12,152" Name="groupBox1" Width="211">
+        <Grid Panel.ZIndex="100">
+        <Label Content="{Binding MangaName}" Height="52" Margin="12,12,12,0" Name="label1" VerticalAlignment="Top" FontSize="25" FontFamily="Segoe UI" Background="Transparent" />
+        <TextBlock Margin="12,65,229,12" Name="textBlock1" Text="{Binding Description}" Background="Transparent" TextWrapping="Wrap" FontSize="15" />
+        <GroupBox Header="Info" HorizontalAlignment="Right" Margin="0,65,12,84" Name="groupBox1" Width="211">
             <Grid>
-                <Label Content="Label" Height="28" Margin="14,15,6,0" Name="label2" VerticalAlignment="Top" FontSize="14" />
-                <Label Content="Label" Height="28" Margin="14,49,6,0" Name="label3" VerticalAlignment="Top" FontSize="14"/>
+                <Label Content="Author(s):" Height="28" Margin="14,15,6,0" Name="label2" VerticalAlignment="Top" FontSize="14" />
+                <Label Content="Start Release:" Height="28" Margin="14,144,6,0" Name="label3" VerticalAlignment="Top" FontSize="14"/>
+                <TextBlock Height="92" Margin="22,46,14,0" Name="textBlock2" Text="{Binding Author}" VerticalAlignment="Top" TextWrapping="Wrap" FontSize="16"/>
+                <TextBlock Margin="22,170,6,7" Name="textBlock3" Text="{Binding StartRelease}"  TextWrapping="Wrap" FontSize="16"/>
             </Grid>
         </GroupBox>
+        </Grid>
+        <Grid Panel.ZIndex="1" x:Name="BackPanel">
+            <Grid.BitmapEffect>
+                <BlurBitmapEffect Radius="20"/>
+            </Grid.BitmapEffect>
+            <Image x:Name="BackPanelImg" Source="{Binding BookImage}">
+            </Image>
+        </Grid>
     </Grid>
 </UserControl>

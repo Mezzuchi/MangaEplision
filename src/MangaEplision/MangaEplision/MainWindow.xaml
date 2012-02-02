@@ -15,18 +15,23 @@
             <metro:MetroTabItem Header="Dashboard">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="679" />
+                        <ColumnDefinition Width="679*" />
                         <ColumnDefinition Width="152" />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <metro:MetroGroupBox Margin="6" x:Name="metroGroupBox1" Header="Catalog" NotificationsCount="10">
-                            <ListBox Background="Transparent" Name="CatalogListBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" Height="490">
+                        <metro:MetroGroupBox Margin="6" x:Name="metroGroupBox1" Header="Catalog" NotificationsCount="0" Foreground="Black">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="300*"/>
+                                </Grid.RowDefinitions>
+                            <ListBox Background="Transparent" Name="CatalogListBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Height="490" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <ContentPresenter Content="{Binding}"/>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
+                            </Grid>
                         </metro:MetroGroupBox>
                     </Grid>
                     <Grid Grid.Column="1">
