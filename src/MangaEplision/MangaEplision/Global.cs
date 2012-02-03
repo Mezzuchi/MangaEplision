@@ -20,12 +20,32 @@ using MangaEplision.Base;
     {
         public static string DataDir = null;
         public static string CatalogFilename = null;
+        public static string CollectionDir = null;
         public static void Initialize()
         {
             DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MangaEplision";
 
             if (!Directory.Exists(DataDir))
                 Directory.CreateDirectory(DataDir);
+
+            CollectionDir = DataDir + "\\Collection\\";
+
+            if (!Directory.Exists(CollectionDir))
+                Directory.CreateDirectory(CollectionDir);
+
+            fswatch = new FileSystemWatcher(CollectionDir);
+
+            fswatch.EnableRaisingEvents = true;
+
+            fswatch.Changed += new FileSystemEventHandler(fswatch_Changed);
+
+            fswatch.Deleted += new FileSystemEventHandler(fswatch_Deleted);
+
+            fswatch.Created += new FileSystemEventHandler(fswatch_Created);
+
+            CollectionBooks = new List<Book>();
+
+            LoadCollection();
 
             CatalogFilename = DataDir + "\\Catalog.bin";
 
@@ -76,6 +96,79 @@ using MangaEplision.Base;
                 LoadCatalog();
             }
         }
+
+        #region Collection
+        static void fswatch_Created(object sender, FileSystemEventArgs e)
+        {
+            using (var fs = new FileStream(e.FullPath, FileMode.Open))
+            {
+                try
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    Book b = (Book)bf.Deserialize(fs);
+                    b.Filename = e.FullPath;
+                    CollectionBooks.Add(b);
+                }
+                catch (Exception)
+                {
+
+                }
+                finally
+                {
+                    fs.Close();
+                }
+            }
+        }
+
+        static void fswatch_Changed(object sender, FileSystemEventArgs e)
+        {
+            
+        }
+
+        static void fswatch_Deleted(object sender, FileSystemEventArgs e)
+        {
+            Book bk = null;
+            foreach (Book b in CollectionBooks)
+                if (b.Filename == e.FullPath)
+                {
+                    bk = b;
+                    break;
+                }
+            CollectionBooks.Remove(bk);
+
+        }
+
+        private static void LoadCollection()
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+
+            foreach (string file in Directory.GetFiles(CollectionDir, "*.bin"))
+            {
+                var fs = new FileStream(file,FileMode.Open);
+                try
+                {
+                    Book b = (Book)bf.Deserialize(fs);
+                    b.Filename = file;
+                    CollectionBooks.Add(b);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Unable to load book from collection!" + Environment.NewLine + "File: " + file);
+                }
+                finally
+                {
+                    fs.Close();
+                    fs.Dispose();
+                }
+            }
+            
+        }
+
+        private static FileSystemWatcher fswatch = null;
+
+        public static List<Book> CollectionBooks = null;
+        #endregion
+
         private delegate void EmptyDelegate();
         private static void LoadSource()
         {

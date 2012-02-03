@@ -64,12 +64,16 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFMitsuControls">
+      <HintPath>..\..\..\lib\WPFMitsuControls.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\ImageToBookPageConverter.cs" />
     <Compile Include="MangaInfoControl.xaml.cs">
       <DependentUpon>MangaInfoControl.xaml</DependentUpon>
     </Compile>
@@ -77,6 +81,9 @@
     <Compile Include="Global.cs" />
     <Compile Include="IndefiniteProgressDialog.xaml.cs">
       <DependentUpon>IndefiniteProgressDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MangaReaderWin.xaml.cs">
+      <DependentUpon>MangaReaderWin.xaml</DependentUpon>
     </Compile>
     <Compile Include="Manga\Base\IMangaSource.cs" />
     <Compile Include="Manga\Base\Manga.cs" />
@@ -115,6 +122,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MangaReaderWin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -169,7 +180,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.None" BuildVersion_BuildAction="Build" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Build" BuildVersion_BuildVersioningStyle="None.None.Increment.None" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

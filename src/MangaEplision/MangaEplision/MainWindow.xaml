@@ -42,6 +42,17 @@
                 </Grid>
             </metro:MetroTabItem>
             <metro:MetroTabItem Header="Collection">
+                <Grid>
+                    <ListView Name="CollectionListView" ItemsSource="{x:Static me:Global.CollectionBooks}" FontSize="14">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding BookName}" Width="400"/>
+                                <GridViewColumn Header="Manga" DisplayMemberBinding="{Binding Source=ParentManga, Path=MangaName}" Width="200"/>
+                                <GridViewColumn Header="Release Date" DisplayMemberBinding="{Binding ReleaseDate}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
             </metro:MetroTabItem>
         </metro:MetroTabControl>
     </Grid>

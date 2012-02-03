@@ -1,0 +1,27 @@
+﻿<Window x:Class="MangaEplision.MangaReaderWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mitsu="clr-namespace:WPFMitsuControls;assembly=WPFMitsuControls"
+        xmlns:convert="clr-namespace:MangaEplision.Converters"
+        xmlns:metro="clr-namespace:MangaEplision.Metro"
+        Title="{Binding BookName}" Height="427" Width="668" Background="Black">
+    <Window.Resources>
+        <ResourceDictionary>
+            <convert:ImageToBookPageConverter x:Key="IBPCon"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid Panel.ZIndex="0">
+            <mitsu:Book x:Name="BookControl" ItemsSource="{Binding Images,Converter=IBPCon}">
+                
+            </mitsu:Book>
+        </Grid>
+        <Grid Panel.ZIndex="100">
+            <Grid Margin="0,334,0,0" Opacity="70" Background="Black">
+                <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="106,16,0,0" x:Name="previousBtn" VerticalAlignment="Top" Click="previousBtn_Click"/>
+                <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="137,16,0,0" x:Name="nextBtn" VerticalAlignment="Top" Click="nextBtn_Click"/>
+                <Slider Height="23" Margin="168,18,76,0" Name="slider1" VerticalAlignment="Top" Value="{Binding Source=BookControl,Path=CurrentSheetIndex}" Maximum="{Binding BookControl.ItemSource,Path=Count}" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

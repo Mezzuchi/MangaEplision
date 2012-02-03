@@ -59,6 +59,7 @@ namespace MangaEplision.Base
         }
         public Manga ParentManga { get; set; }
         public Collection<Image> Pages { get; set; }
+        public string Filename { get; set; }
     }
     [Serializable]
     public class BookEntry
