@@ -26,5 +26,10 @@ namespace MangaEplision
 
             this.DataContext = info;            
         }
+
+        private void downloadTile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

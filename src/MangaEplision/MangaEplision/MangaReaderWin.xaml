@@ -20,7 +20,7 @@
             <Grid Margin="0,334,0,0" Opacity="70" Background="Black">
                 <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="106,16,0,0" x:Name="previousBtn" VerticalAlignment="Top" Click="previousBtn_Click"/>
                 <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="137,16,0,0" x:Name="nextBtn" VerticalAlignment="Top" Click="nextBtn_Click"/>
-                <Slider Height="23" Margin="168,18,76,0" Name="slider1" VerticalAlignment="Top" Value="{Binding Source=BookControl,Path=CurrentSheetIndex}" Maximum="{Binding BookControl.ItemSource,Path=Count}" />
+                <Slider Height="23" Margin="168,18,76,0" Name="slider1" VerticalAlignment="Top" Value="{Binding Source=BookControl,Path=CurrentSheetIndex}" Maximum="{Binding BookControl.ItemsSource,Path=Count}" />
             </Grid>
         </Grid>
     </Grid>
