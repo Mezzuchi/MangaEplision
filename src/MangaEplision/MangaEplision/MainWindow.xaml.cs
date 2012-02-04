@@ -125,5 +125,15 @@ namespace MangaEplision
                         });
             }
         }
+
+        private void CollectionListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (CollectionListView.SelectedItem != null)
+            {
+                var mr = new MangaReaderWin();
+                mr.DataContext = CollectionListView.SelectedItem;
+                mr.Show();
+            }
+        }
     }
 }

@@ -43,11 +43,11 @@
             </metro:MetroTabItem>
             <metro:MetroTabItem Header="Collection">
                 <Grid>
-                    <ListView Name="CollectionListView" ItemsSource="{x:Static me:Global.CollectionBooks}" FontSize="14">
+                    <ListView Name="CollectionListView" ItemsSource="{Binding me:Global.BookCollection,NotifyOnSourceUpdated=True}" FontSize="14" MouseDoubleClick="CollectionListView_MouseDoubleClick">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding BookName}" Width="400"/>
-                                <GridViewColumn Header="Manga" DisplayMemberBinding="{Binding Source=ParentManga, Path=MangaName}" Width="200"/>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="400"/>
+                                <GridViewColumn Header="Manga" DisplayMemberBinding="{Binding Path=ParentManga.MangaName}" Width="200"/>
                                 <GridViewColumn Header="Release Date" DisplayMemberBinding="{Binding ReleaseDate}"/>
                             </GridView>
                         </ListView.View>

@@ -10,7 +10,7 @@
         <Label Content="{Binding MangaName}" Height="52" Margin="12,12,12,0" Name="label1" VerticalAlignment="Top" FontSize="25" FontFamily="Segoe UI" Background="Transparent" />
             <Grid Margin="0,65,229,0">
                 <TextBlock  Name="textBlock1" Text="{Binding Description}" Background="Transparent" TextWrapping="Wrap" FontSize="15" Margin="0,0,0,335" />
-                <my:MetroGroupBox  x:Name="metroGroupBox1" NotificationsCount="{Binding Source=BooksLsView.ItemsSource,Path=Count}" Header="Books" Foreground="Black" Margin="0,0,0,26" VerticalAlignment="Bottom">
+                <my:MetroGroupBox  x:Name="metroGroupBox1" NotificationsCount="{Binding ElementName=BooksLsView, Path=ItemsSource.Count,FallbackValue=0}" Header="Books" Foreground="Black" Margin="0,0,0,26" VerticalAlignment="Bottom">
                     <ListView x:Name="BooksLsView" ItemsSource="{Binding Books}" FontSize="13" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="200">
                         <ListView.View>
                             <GridView>
@@ -38,7 +38,7 @@
             <Grid.BitmapEffect>
                 <BlurBitmapEffect Radius="10"/>
             </Grid.BitmapEffect>
-            <Image x:Name="BackPanelImg" Source="{Binding BookImage}">
+            <Image x:Name="BackPanelImg" Source="{Binding BookImageUrl, IsAsync=True}">
             </Image>
         </Grid>
     </Grid>

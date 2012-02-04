@@ -10,6 +10,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MangaEplision.Converters;
+using MangaEplision.Base;
+using WPFMitsuControls;
 
 namespace MangaEplision
 {
@@ -21,13 +24,33 @@ namespace MangaEplision
         public MangaReaderWin()
         {
             InitializeComponent();
+            this.Loaded += MangaReaderWin_Loaded;
+        }
+
+        void MangaReaderWin_Loaded(object sender, RoutedEventArgs e)
+        {
+            var bk = (MangaEplision.Base.Book)this.DataContext;
+            /*foreach (var x in (List<WPFMitsuControls.BookPage>)(new ImageByteToBookPageConverter().Convert(
+                (bk.Pages),
+                null,
+                null,
+                null)))
+            {
+                BookControl.Items.Add(x);
+            }*/
+
+            using (var ms = new System.IO.MemoryStream(bk.Pages[0]))
+            {
+                var img = BitmapFrame.Create(ms, BitmapCreateOptions.None, BitmapCacheOption.Default);
+                TestImage.Source = img;
+            }
         }
 
         private void previousBtn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                BookControl.AnimateToPreviousPage(true, 2);
+                BookControl.AnimateToPreviousPage(true, 700);
             }
             catch (Exception)
             {
@@ -37,9 +60,11 @@ namespace MangaEplision
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
         {
+            BookControl.CurrentPage = WPFMitsuControls.BookCurrentPage.RightSheet;
+
             try
             {
-                BookControl.AnimateToNextPage(true, 2);
+                BookControl.AnimateToNextPage(true, 700);
             }
             catch (Exception)
             {

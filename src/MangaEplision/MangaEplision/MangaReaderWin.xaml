@@ -4,24 +4,24 @@
         xmlns:mitsu="clr-namespace:WPFMitsuControls;assembly=WPFMitsuControls"
         xmlns:convert="clr-namespace:MangaEplision.Converters"
         xmlns:metro="clr-namespace:MangaEplision.Metro"
-        Title="{Binding BookName}" Height="427" Width="668" Background="Black">
+        Title="{Binding Name}" Height="427" Width="668" Background="Black">
     <Window.Resources>
         <ResourceDictionary>
-            <convert:ImageToBookPageConverter x:Key="IBPCon"/>
+            <convert:ImageByteToBookPageConverter x:Key="IBPCon"/>
+            <convert:ImageByteToBookPageConverter x:Key="ImageByteToBookPageConverter1" />
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Grid Panel.ZIndex="0">
-            <mitsu:Book x:Name="BookControl" ItemsSource="{Binding Images,Converter=IBPCon}">
-                
+        <Grid Panel.ZIndex="70">
+            <mitsu:Book x:Name="BookControl" Height="Auto" Width="Auto" Visibility="Hidden">
+                <!--ItemsSource="{Binding Path=Pages,Converter={StaticResource ImageByteToBookPageConverter1}, IsAsync=True}"-->
             </mitsu:Book>
+            <Image x:Name="TestImage" Panel.ZIndex="100"></Image>
         </Grid>
-        <Grid Panel.ZIndex="100">
-            <Grid Margin="0,334,0,0" Opacity="70" Background="Black">
-                <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="106,16,0,0" x:Name="previousBtn" VerticalAlignment="Top" Click="previousBtn_Click"/>
-                <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="137,16,0,0" x:Name="nextBtn" VerticalAlignment="Top" Click="nextBtn_Click"/>
-                <Slider Height="23" Margin="168,18,76,0" Name="slider1" VerticalAlignment="Top" Value="{Binding Source=BookControl,Path=CurrentSheetIndex}" Maximum="{Binding BookControl.ItemsSource,Path=Count}" />
+            <Grid Opacity="70" Background="Black" Height="54" VerticalAlignment="Bottom" Panel.ZIndex="100" Margin="69,0,72,0">
+                <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="76,16,0,0" x:Name="previousBtn" VerticalAlignment="Top" Click="previousBtn_Click"/>
+                <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="107,16,0,0" x:Name="nextBtn" VerticalAlignment="Top" Click="nextBtn_Click"/>
+                <Slider Height="23" Margin="138,18,40,0" Name="slider1" VerticalAlignment="Top" Value="{Binding Source=BookControl,Path=CurrentSheetIndex}" Maximum="{Binding BookControl.ItemsSource,Path=Count}" />
             </Grid>
-        </Grid>
     </Grid>
 </Window>

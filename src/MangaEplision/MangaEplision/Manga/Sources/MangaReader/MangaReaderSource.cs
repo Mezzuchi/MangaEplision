@@ -9,6 +9,8 @@ using MangaEplision.Extensions;
 using System.Windows.Threading;
 using System.Threading.Tasks;
 using MangaEplision.Base;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace MangaEplision.Sources.MangaReader
 {
@@ -36,7 +38,7 @@ namespace MangaEplision.Sources.MangaReader
             Book b = new Book(mag);
             b.Name = chapter.Name;
             b.ReleaseDate = chapter.ReleaseDate;
-            b.Pages = new System.Collections.ObjectModel.Collection<System.Windows.Controls.Image>();
+            b.Pages = new System.Collections.ObjectModel.Collection<byte[]>();
 
             string url = chapter.Url; //first page.
             string firstpagehtml = GetHtml(url);
@@ -55,9 +57,9 @@ namespace MangaEplision.Sources.MangaReader
             firstimgurl = Regex.Replace(firstimgurl, "(src=\"|\")", "");
             System.Windows.Application.Current.Dispatcher.Invoke(new EmptyDelegate(delegate()
             {
-                System.Windows.Controls.Image firsti = new System.Windows.Controls.Image();
-                firsti.LoadUrl(firstimgurl);
-                b.Pages.Add(firsti);
+                var byt = new WebClient().DownloadData(firstimgurl);
+
+                b.Pages.Add(byt);
             }), null);
 
             string url_1 = url.Substring(0, url.NthIndexOf("-", 2) + 1);
@@ -72,10 +74,11 @@ namespace MangaEplision.Sources.MangaReader
                 imgurl = Regex.Replace(imgurl, "(src=\"|\")", "");
                 System.Windows.Application.Current.Dispatcher.Invoke(new EmptyDelegate(delegate()
                 {
-                    System.Windows.Controls.Image sti = new System.Windows.Controls.Image();
-                    sti.LoadUrl(imgurl);
-                    b.Pages.Add(sti);
+                    var byt = new WebClient().DownloadData(imgurl);
+                    b.Pages.Add(byt);
                 }), null);
+
+                System.Threading.Thread.Sleep(100); //Prevent simulating a DDOS.
             }
 
             return b;
@@ -182,6 +185,7 @@ namespace MangaEplision.Sources.MangaReader
             }
             catch (Exception) { m.Author = "Unknown"; }
 
+            m.FetchImage();
 
             return m;
         }

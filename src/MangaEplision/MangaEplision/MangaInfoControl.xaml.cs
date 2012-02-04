@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Effects;
+using MangaEplision.Base;
 
 namespace MangaEplision
 {
@@ -29,7 +30,32 @@ namespace MangaEplision
 
         private void downloadTile_Click(object sender, RoutedEventArgs e)
         {
+            if (BooksLsView.SelectedItem == null)
+                MessageBox.Show("Please select a book before pressing this button!");
+            else
+            {
+                BookEntry be = (BookEntry)BooksLsView.SelectedItem;
 
+                if (Global.GetBookExist((Manga)this.DataContext, be))
+                    MessageBox.Show("This book is already downloaded!");
+                else
+                {
+                    IndefiniteProgressDialog ipd = new IndefiniteProgressDialog();
+                    ipd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                    ipd.Topmost = true;
+                    ipd.Show();
+
+                    Global.DownloadMangaBook(
+                                        (Manga)this.DataContext, be, () =>
+                                        {
+                                            Dispatcher.Invoke(new EmptyDelegate(() =>
+                                                {
+                                                    ((MainWindow)Application.Current.MainWindow).metroTabControl1.SelectedIndex = 1;
+                                                    ipd.Close();
+                                                }));
+                                        });
+                }
+            }
         }
     }
 }

@@ -17,27 +17,32 @@ namespace MangaEplision.Base
             Books = new Collection<BookEntry>();
         }
         public string BookImageUrl { get; set; }
+        [NonSerialized]
         private ImageSource _imgcache = null;
-        public ImageSource BookImage
+        [NonSerialized]
+        public object BookImageFld = null;
+        public object BookImage
         {
             get
             {
-                if (BookImageUrl != null)
+                return BookImageFld;
+            }
+        }
+        internal void FetchImage()
+        {
+            if (BookImageUrl != null)
+            {
+                if (_imgcache == null)
                 {
-                    if (_imgcache == null)
-                    {
-                        System.Windows.Media.Imaging.BitmapImage bi = new System.Windows.Media.Imaging.BitmapImage();
-                        bi.BeginInit();
-                        bi.StreamSource = HttpWebRequest.Create(BookImageUrl).GetResponse().GetResponseStream();
-                        bi.EndInit();
-                        _imgcache = bi;
-                        return bi;
-                    }
-                    else
-                        return _imgcache;
+                    System.Windows.Media.Imaging.BitmapImage bi = new System.Windows.Media.Imaging.BitmapImage();
+                    bi.BeginInit();
+                    bi.StreamSource = HttpWebRequest.Create(BookImageUrl).GetResponse().GetResponseStream();
+                    bi.EndInit();
+                    _imgcache = bi;
+                    BookImageFld = bi;
                 }
                 else
-                    return null;
+                    BookImageFld = _imgcache;
             }
         }
         public Collection<BookEntry> Books { get; set; }
@@ -58,7 +63,7 @@ namespace MangaEplision.Base
             ParentManga = m;   
         }
         public Manga ParentManga { get; set; }
-        public Collection<Image> Pages { get; set; }
+        public Collection<byte[]> Pages { get; set; }
         public string Filename { get; set; }
     }
     [Serializable]

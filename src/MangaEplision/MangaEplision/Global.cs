@@ -60,6 +60,7 @@ using MangaEplision.Base;
                             prog = new IndefiniteProgressDialog();
                             prog.Owner = Application.Current.Windows[0];
                             prog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                            prog.Topmost = true;
                             prog.Show();
                         }));
 
@@ -118,6 +119,8 @@ using MangaEplision.Base;
                     fs.Close();
                 }
             }
+
+            BookCollection = CollectionBooks;
         }
 
         static void fswatch_Changed(object sender, FileSystemEventArgs e)
@@ -134,7 +137,9 @@ using MangaEplision.Base;
                     bk = b;
                     break;
                 }
-            CollectionBooks.Remove(bk);
+            if (bk != null)
+                CollectionBooks.Remove(bk);
+            BookCollection = CollectionBooks;
 
         }
 
@@ -150,6 +155,8 @@ using MangaEplision.Base;
                     Book b = (Book)bf.Deserialize(fs);
                     b.Filename = file;
                     CollectionBooks.Add(b);
+
+                    
                 }
                 catch (Exception)
                 {
@@ -161,14 +168,37 @@ using MangaEplision.Base;
                     fs.Dispose();
                 }
             }
+            BookCollection = CollectionBooks;
             
         }
 
         private static FileSystemWatcher fswatch = null;
 
         public static List<Book> CollectionBooks = null;
+        public static List<Book> BookCollection
+        {
+            get
+            {
+                return (List<Book>)Application.Current.Dispatcher.Invoke(new EmptyReturnDelegate(() =>
+                    (List<Book>)Application.Current.MainWindow.GetValue(BookCollectionProperty)));
+            }
+            set 
+            {
+                Application.Current.Dispatcher.Invoke(
+                    new EmptyDelegate(
+                        () => 
+                            {
+                                Application.Current.MainWindow.SetValue(BookCollectionProperty, value);
+
+                                //Screw MVVM at this point:
+                                ((MainWindow)Application.Current.MainWindow).CollectionListView.ItemsSource = value;
+                            }));
+            }
+        }
+        public static readonly DependencyProperty BookCollectionProperty = DependencyProperty.Register("BookCollection", typeof(List<Book>), typeof(Global));
         #endregion
 
+        private delegate object EmptyReturnDelegate();
         private delegate void EmptyDelegate();
         private static void LoadSource()
         {
@@ -191,5 +221,50 @@ using MangaEplision.Base;
         public static string[] Mangas { get; private set; }
         public static Dictionary<string, string> MangaDictionary { get; private set; }
         public static IMangaSource MangaSource { get; private set; }
+        public static bool GetBookExist(Manga manga, BookEntry book)
+        {
+            var firstcheck = File.Exists(CollectionDir + "\\" + manga.MangaName + "_" + book.Name.Replace(":","-") + ".bin");
+
+            if (firstcheck)
+                return true;
+            else
+            {
+                foreach (var b in CollectionBooks)
+                    if (b.Name == book.Name)
+                        return true;
+            }
+
+            return false;
+        }
+        public static void DownloadMangaBook(Manga manga, BookEntry book, Action act = null)
+        {
+            Task.Factory.StartNew(() =>
+                {
+                    Book bk = Global.MangaSource.GetBook(manga, book);
+
+                    BinaryFormatter bf = new BinaryFormatter();
+                    using (var fs = new FileStream(CollectionDir + "\\" + bk.ParentManga.MangaName + "_" + bk.Name.Replace(":","-") + ".bin", FileMode.Create))
+                    {
+                        try
+                        {
+                            bf.Serialize(fs, bk);
+                        }
+                        catch (Exception)
+                        {
+                            
+                        }
+                        fs.Close();
+                    }
+                }).ContinueWith(
+                (TSK) =>
+                {
+                    if (act != null)
+                        act();
+
+                    return TSK.Exception;
+                });
+
+        }
     }
+    public delegate void EmptyDelegate();
 }
