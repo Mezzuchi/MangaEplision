@@ -71,7 +71,7 @@ namespace MangaEplision
                     {
                         BinaryFormatter binf = new BinaryFormatter();
 
-                        LoadSource();
+                        //LoadSource();
 
                         var fs = new FileStream(CatalogFilename, FileMode.Create);
                         var dict = MangaSource.GetAvailableManga();

@@ -26,7 +26,7 @@ namespace MangaEplision
             InitializeComponent();
 
             this.DataContext = info;
-            Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            //Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
         }
 
         private void downloadTile_Click(object sender, RoutedEventArgs e)
