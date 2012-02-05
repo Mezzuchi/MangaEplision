@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\DisplayModeConverter.cs" />
     <Compile Include="Converters\ImageUriToBookPageConverter.cs" />
     <Compile Include="MangaInfoControl.xaml.cs">
       <DependentUpon>MangaInfoControl.xaml</DependentUpon>

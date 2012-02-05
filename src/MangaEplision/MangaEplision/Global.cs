@@ -14,7 +14,7 @@ namespace MangaEplision
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Windows;
     using System.Threading.Tasks;
-using MangaEplision.Base;
+    using MangaEplision.Base;
     using System.Net;
 
     public static class Global
@@ -108,7 +108,7 @@ using MangaEplision.Base;
 
         internal static void Current_Exit(object sender, ExitEventArgs e)
         {
-            var d = "p";
+
         }
 
         #region Collection
@@ -148,7 +148,7 @@ using MangaEplision.Base;
 
         static void fswatch_Changed(object sender, FileSystemEventArgs e)
         {
-            
+
         }
 
         static void fswatch_Deleted(object sender, FileSystemEventArgs e)
@@ -177,16 +177,16 @@ using MangaEplision.Base;
         {
             BinaryFormatter bf = new BinaryFormatter();
 
-            foreach (string file in Directory.GetFiles(CollectionDir, "*.bin",SearchOption.AllDirectories))
+            foreach (string file in Directory.GetFiles(CollectionDir, "*.bin", SearchOption.AllDirectories))
             {
-                var fs = new FileStream(file,FileMode.Open);
+                var fs = new FileStream(file, FileMode.Open);
                 try
                 {
                     Book b = (Book)bf.Deserialize(fs);
                     b.Filename = file;
                     CollectionBooks.Add(b);
 
-                    
+
                 }
                 catch (Exception)
                 {
@@ -199,7 +199,7 @@ using MangaEplision.Base;
                 }
             }
             BookCollection = CollectionBooks;
-            
+
         }
 
         private static FileSystemWatcher fswatch = null;
@@ -212,17 +212,17 @@ using MangaEplision.Base;
                 return (List<Book>)Application.Current.Dispatcher.Invoke(new EmptyReturnDelegate(() =>
                     (List<Book>)Application.Current.MainWindow.GetValue(BookCollectionProperty)));
             }
-            set 
+            set
             {
                 Application.Current.Dispatcher.Invoke(
                     new EmptyDelegate(
-                        () => 
-                            {
-                                Application.Current.MainWindow.SetValue(BookCollectionProperty, value);
+                        () =>
+                        {
+                            Application.Current.MainWindow.SetValue(BookCollectionProperty, value);
 
-                                //Screw MVVM at this point:
-                                ((MainWindow)Application.Current.MainWindow).CollectionListView.ItemsSource = value;
-                            }));
+                            //Screw MVVM at this point:
+                            ((MainWindow)Application.Current.MainWindow).CollectionListView.ItemsSource = value;
+                        }));
             }
         }
         public static readonly DependencyProperty BookCollectionProperty = DependencyProperty.Register("BookCollection", typeof(List<Book>), typeof(Global));

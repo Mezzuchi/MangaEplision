@@ -29,7 +29,7 @@ namespace MangaEplision
 
         void MangaReaderWin_Loaded(object sender, RoutedEventArgs e)
         {
-            var bk = (MangaEplision.Base.Book)this.DataContext;
+          /*  var bk = (MangaEplision.Base.Book)this.DataContext;
             foreach (var x in (List<WPFMitsuControls.BookPage>)(new ImageUriToBookPageConverter().Convert(
                 (bk.PageLocalUrls),
                 null,

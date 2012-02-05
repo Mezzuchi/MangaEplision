@@ -9,18 +9,26 @@
         <ResourceDictionary>
             <convert:ImageUriToBookPageConverter x:Key="IBPCon"/>
             <convert:ImageUriToBookPageConverter x:Key="ImageByteToBookPageConverter1" />
+            <convert:DisplayModeConverter x:Key="DisplayModeConverter1" />
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid Panel.ZIndex="70">
-            <mitsu:Book x:Name="BookControl" Height="Auto" Width="Auto">
-                <!--ItemsSource="{Binding Path=Pages,Converter={StaticResource ImageByteToBookPageConverter1}, IsAsync=True}"-->
+            <mitsu:Book x:Name="BookControl" Height="Auto" Width="Auto" ItemsSource="{Binding Path=PageLocalUrls,Converter={StaticResource ImageByteToBookPageConverter1}, IsAsync=True}">
+
             </mitsu:Book>
         </Grid>
-            <Grid Opacity="70" Background="Black" Height="54" VerticalAlignment="Bottom" Panel.ZIndex="100" Margin="69,0,72,0">
-                <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="76,16,0,0" x:Name="previousBtn" VerticalAlignment="Top" Click="previousBtn_Click"/>
-                <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="107,16,0,0" x:Name="nextBtn" VerticalAlignment="Top" Click="nextBtn_Click"/>
-                <Slider Height="23" Margin="138,18,40,0" Name="slider1" VerticalAlignment="Top" Value="{Binding Source=BookControl,Path=CurrentSheetIndex}" Maximum="{Binding BookControl.ItemsSource,Path=Count}" />
-            </Grid>
+        <Grid Opacity="70" Height="54" VerticalAlignment="Bottom" Panel.ZIndex="100" Margin="69,0,72,0">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="Black" Offset="1"/>
+                    <GradientStop Color="Gray" Offset="0"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="76,16,0,0" x:Name="previousBtn" VerticalAlignment="Top" Click="previousBtn_Click"/>
+            <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="107,16,0,0" x:Name="nextBtn" VerticalAlignment="Top" Click="nextBtn_Click"/>
+            <Slider Height="23" Margin="138,18,110,0" Name="slider1" VerticalAlignment="Top" Minimum="0" Value="{Binding ElementName=BookControl,Path=CurrentSheetIndex,Mode=TwoWay}" Maximum="{Binding ElementName=BookControl,Path=ItemsSource.Count}" />
+            <CheckBox Content="Zoom on Page?" Height="16" HorizontalAlignment="Left" Margin="406,32,0,0" Name="checkBox1" VerticalAlignment="Top" Foreground="White" IsChecked="{Binding ElementName=BookControl,Path=DisplayMode,Mode=TwoWay,Converter={StaticResource DisplayModeConverter1}}"  />
+        </Grid>
     </Grid>
 </Window>
