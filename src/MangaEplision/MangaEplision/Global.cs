@@ -15,6 +15,7 @@ namespace MangaEplision
     using System.Windows;
     using System.Threading.Tasks;
 using MangaEplision.Base;
+    using System.Net;
 
     public static class Global
     {
@@ -23,6 +24,7 @@ using MangaEplision.Base;
         public static string CollectionDir = null;
         public static void Initialize()
         {
+
             DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MangaEplision";
 
             if (!Directory.Exists(DataDir))
@@ -36,6 +38,7 @@ using MangaEplision.Base;
             fswatch = new FileSystemWatcher(CollectionDir);
 
             fswatch.EnableRaisingEvents = true;
+            fswatch.IncludeSubdirectories = true;
 
             fswatch.Changed += new FileSystemEventHandler(fswatch_Changed);
 
@@ -98,29 +101,49 @@ using MangaEplision.Base;
             }
         }
 
+        internal static void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        internal static void Current_Exit(object sender, ExitEventArgs e)
+        {
+            var d = "p";
+        }
+
         #region Collection
         static void fswatch_Created(object sender, FileSystemEventArgs e)
         {
-            using (var fs = new FileStream(e.FullPath, FileMode.Open))
+            try
             {
-                try
+                if (e.FullPath.EndsWith(".bin"))
                 {
-                    BinaryFormatter bf = new BinaryFormatter();
-                    Book b = (Book)bf.Deserialize(fs);
-                    b.Filename = e.FullPath;
-                    CollectionBooks.Add(b);
-                }
-                catch (Exception)
-                {
+                    using (var fs = new FileStream(e.FullPath, FileMode.Open))
+                    {
+                        try
+                        {
+                            BinaryFormatter bf = new BinaryFormatter();
+                            Book b = (Book)bf.Deserialize(fs);
+                            b.Filename = e.FullPath;
+                            CollectionBooks.Add(b);
+                        }
+                        catch (Exception)
+                        {
 
-                }
-                finally
-                {
-                    fs.Close();
+                        }
+                        finally
+                        {
+                            fs.Close();
+                        }
+                    }
+
+                    BookCollection = CollectionBooks;
                 }
             }
+            catch (Exception)
+            {
 
-            BookCollection = CollectionBooks;
+            }
         }
 
         static void fswatch_Changed(object sender, FileSystemEventArgs e)
@@ -130,16 +153,23 @@ using MangaEplision.Base;
 
         static void fswatch_Deleted(object sender, FileSystemEventArgs e)
         {
-            Book bk = null;
-            foreach (Book b in CollectionBooks)
-                if (b.Filename == e.FullPath)
-                {
-                    bk = b;
-                    break;
-                }
-            if (bk != null)
-                CollectionBooks.Remove(bk);
-            BookCollection = CollectionBooks;
+            try
+            {
+                Book bk = null;
+                foreach (Book b in CollectionBooks)
+                    if (b.Filename == e.FullPath)
+                    {
+                        bk = b;
+                        break;
+                    }
+                if (bk != null)
+                    CollectionBooks.Remove(bk);
+                BookCollection = CollectionBooks;
+            }
+            catch (Exception)
+            {
+
+            }
 
         }
 
@@ -147,7 +177,7 @@ using MangaEplision.Base;
         {
             BinaryFormatter bf = new BinaryFormatter();
 
-            foreach (string file in Directory.GetFiles(CollectionDir, "*.bin"))
+            foreach (string file in Directory.GetFiles(CollectionDir, "*.bin",SearchOption.AllDirectories))
             {
                 var fs = new FileStream(file,FileMode.Open);
                 try
@@ -223,7 +253,7 @@ using MangaEplision.Base;
         public static IMangaSource MangaSource { get; private set; }
         public static bool GetBookExist(Manga manga, BookEntry book)
         {
-            var firstcheck = File.Exists(CollectionDir + "\\" + manga.MangaName + "_" + book.Name.Replace(":","-") + ".bin");
+            var firstcheck = File.Exists(CollectionDir + "\\" + manga.MangaName + "\\" + book.Name.CommonReplace() + "\\" + book.Name.CommonReplace() + ".bin");
 
             if (firstcheck)
                 return true;
@@ -236,33 +266,56 @@ using MangaEplision.Base;
 
             return false;
         }
+        private static string CommonReplace(this string str)
+        {
+            return str.Replace(":", "-");
+        }
         public static void DownloadMangaBook(Manga manga, BookEntry book, Action act = null)
         {
             Task.Factory.StartNew(() =>
                 {
-                    Book bk = Global.MangaSource.GetBook(manga, book);
-
-                    BinaryFormatter bf = new BinaryFormatter();
-                    using (var fs = new FileStream(CollectionDir + "\\" + bk.ParentManga.MangaName + "_" + bk.Name.Replace(":","-") + ".bin", FileMode.Create))
+                    try
                     {
-                        try
-                        {
-                            bf.Serialize(fs, bk);
-                        }
-                        catch (Exception)
-                        {
-                            
-                        }
-                        fs.Close();
-                    }
-                }).ContinueWith(
-                (TSK) =>
-                {
-                    if (act != null)
-                        act();
+                        Book bk = Global.MangaSource.GetBook(manga, book);
+                        bk.PageLocalUrls = new System.Collections.ObjectModel.Collection<string>();
 
-                    return TSK.Exception;
-                });
+                        BinaryFormatter bf = new BinaryFormatter();
+                        string mangadir = CollectionDir + bk.ParentManga.MangaName;
+                        string bookdir = mangadir + "\\" + bk.Name.CommonReplace() + "\\";
+
+                        if (!Directory.Exists(mangadir))
+                            Directory.CreateDirectory(mangadir);
+                        if (!Directory.Exists(bookdir))
+                            Directory.CreateDirectory(bookdir);
+
+                        using (var fs = new FileStream(bookdir + bk.Name.CommonReplace() + ".bin", FileMode.Create))
+                        {
+                            int i = 1;
+                            using (var wc = new WebClient())
+                            {
+                                foreach (Uri url in bk.PageOnlineUrls)
+                                {
+                                    var file = bookdir + "page" + i + url.LocalPath.Substring(url.LocalPath.LastIndexOf("."));
+                                    wc.DownloadFile(url, file);
+                                    bk.PageLocalUrls.Add(file);
+                                    i++;
+                                }
+                            }
+
+                            bf.Serialize(fs, bk);
+
+                            fs.Close();
+                        }
+                        new DirectoryInfo(mangadir).Attributes = FileAttributes.ReadOnly;
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }).ContinueWith((tsk) =>
+                    {
+                        if (act != null)
+                            act();
+                    });
 
         }
     }

@@ -74,7 +74,7 @@ namespace MangaEplision
         {
             Task.Factory.StartNew(() =>
                 {
-                    System.Threading.Thread.Sleep(2000);
+                    System.Threading.Thread.Sleep(1000);
                     Global.Initialize();
 
                     Dispatcher.Invoke(
@@ -88,6 +88,8 @@ namespace MangaEplision
                             }
                         }));
                 });
+            Application.Current.Exit += new ExitEventHandler(Global.Current_Exit);
+            Application.Current.DispatcherUnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(Global.Current_DispatcherUnhandledException);
         }
         private delegate void EmptyDelegate();
 

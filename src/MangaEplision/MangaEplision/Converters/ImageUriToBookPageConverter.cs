@@ -18,7 +18,7 @@ namespace MangaEplision.Converters
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class ImageByteToBookPageConverter : IValueConverter
+    public class ImageUriToBookPageConverter : IValueConverter
     {
         #region IValueConverter Members
 
@@ -26,20 +26,24 @@ namespace MangaEplision.Converters
         {
             List<WPFMitsuControls.BookPage> pages = new List<WPFMitsuControls.BookPage>();
 
-            var coll = (System.Collections.ObjectModel.Collection<byte[]>)value;
+            var coll = (System.Collections.ObjectModel.Collection<string>)value;
 
             foreach (var by in coll)
             {
-                using (var ms = new MemoryStream(by))
-                {
+                    try
+                    {
+                        var img = new Image();
+                        img.Source = new BitmapImage(new Uri(by));
+                        WPFMitsuControls.BookPage bp = new WPFMitsuControls.BookPage();
+                        bp.Content = new Grid();
+                        ((Grid)bp.Content).Children.Add(img);
+                        pages.Add(bp);
+                    }
+                    catch (Exception)
+                    {
 
-                    var img = new Image();
-                    img.Source = BitmapFrame.Create(ms);
-                    WPFMitsuControls.BookPage bp = new WPFMitsuControls.BookPage();
-                    bp.Content = img;
-                    pages.Add(bp);
+                    }
                 }
-            }
 
             return pages;
         }

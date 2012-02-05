@@ -7,16 +7,15 @@
         Title="{Binding Name}" Height="427" Width="668" Background="Black">
     <Window.Resources>
         <ResourceDictionary>
-            <convert:ImageByteToBookPageConverter x:Key="IBPCon"/>
-            <convert:ImageByteToBookPageConverter x:Key="ImageByteToBookPageConverter1" />
+            <convert:ImageUriToBookPageConverter x:Key="IBPCon"/>
+            <convert:ImageUriToBookPageConverter x:Key="ImageByteToBookPageConverter1" />
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid Panel.ZIndex="70">
-            <mitsu:Book x:Name="BookControl" Height="Auto" Width="Auto" Visibility="Hidden">
+            <mitsu:Book x:Name="BookControl" Height="Auto" Width="Auto">
                 <!--ItemsSource="{Binding Path=Pages,Converter={StaticResource ImageByteToBookPageConverter1}, IsAsync=True}"-->
             </mitsu:Book>
-            <Image x:Name="TestImage" Panel.ZIndex="100"></Image>
         </Grid>
             <Grid Opacity="70" Background="Black" Height="54" VerticalAlignment="Bottom" Panel.ZIndex="100" Margin="69,0,72,0">
                 <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="76,16,0,0" x:Name="previousBtn" VerticalAlignment="Top" Click="previousBtn_Click"/>

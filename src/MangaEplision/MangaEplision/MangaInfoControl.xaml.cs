@@ -25,7 +25,8 @@ namespace MangaEplision
         {
             InitializeComponent();
 
-            this.DataContext = info;            
+            this.DataContext = info;
+            Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
         }
 
         private void downloadTile_Click(object sender, RoutedEventArgs e)
@@ -43,17 +44,16 @@ namespace MangaEplision
                     IndefiniteProgressDialog ipd = new IndefiniteProgressDialog();
                     ipd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                     ipd.Topmost = true;
-                    ipd.Show();
-
+                    Dispatcher.Invoke(new EmptyDelegate(() =>
+                        ipd.Show()));
+                    ((MainWindow)Application.Current.MainWindow).metroTabControl1.SelectedIndex = 1;
                     Global.DownloadMangaBook(
                                         (Manga)this.DataContext, be, () =>
                                         {
                                             Dispatcher.Invoke(new EmptyDelegate(() =>
-                                                {
-                                                    ((MainWindow)Application.Current.MainWindow).metroTabControl1.SelectedIndex = 1;
-                                                    ipd.Close();
-                                                }));
+                                                ipd.Close()));
                                         });
+                    //
                 }
             }
         }

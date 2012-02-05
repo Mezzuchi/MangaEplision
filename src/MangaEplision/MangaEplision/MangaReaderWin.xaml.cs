@@ -30,20 +30,22 @@ namespace MangaEplision
         void MangaReaderWin_Loaded(object sender, RoutedEventArgs e)
         {
             var bk = (MangaEplision.Base.Book)this.DataContext;
-            /*foreach (var x in (List<WPFMitsuControls.BookPage>)(new ImageByteToBookPageConverter().Convert(
-                (bk.Pages),
+            foreach (var x in (List<WPFMitsuControls.BookPage>)(new ImageUriToBookPageConverter().Convert(
+                (bk.PageLocalUrls),
                 null,
                 null,
                 null)))
             {
                 BookControl.Items.Add(x);
-            }*/
+            }
 
-            using (var ms = new System.IO.MemoryStream(bk.Pages[0]))
+            /*using (var ms = new System.IO.MemoryStream(bk.Pages[0]))
             {
                 var img = BitmapFrame.Create(ms, BitmapCreateOptions.None, BitmapCacheOption.Default);
                 TestImage.Source = img;
-            }
+                this.Background = new ImageBrush(img);
+                var p = 0;
+            }*/
         }
 
         private void previousBtn_Click(object sender, RoutedEventArgs e)

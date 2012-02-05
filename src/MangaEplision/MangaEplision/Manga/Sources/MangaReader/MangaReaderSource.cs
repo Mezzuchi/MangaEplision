@@ -38,7 +38,8 @@ namespace MangaEplision.Sources.MangaReader
             Book b = new Book(mag);
             b.Name = chapter.Name;
             b.ReleaseDate = chapter.ReleaseDate;
-            b.Pages = new System.Collections.ObjectModel.Collection<byte[]>();
+            b.Pages = new System.Collections.ObjectModel.Collection<object>();
+            b.PageOnlineUrls = new System.Collections.ObjectModel.Collection<Uri>();
 
             string url = chapter.Url; //first page.
             string firstpagehtml = GetHtml(url);
@@ -57,13 +58,49 @@ namespace MangaEplision.Sources.MangaReader
             firstimgurl = Regex.Replace(firstimgurl, "(src=\"|\")", "");
             System.Windows.Application.Current.Dispatcher.Invoke(new EmptyDelegate(delegate()
             {
-                var byt = new WebClient().DownloadData(firstimgurl);
+                var uri = new Uri(firstimgurl);
+                b.PageOnlineUrls.Add(uri);
+                /*
+                using (var ms = new MemoryStream())
+                {
+                    
 
-                b.Pages.Add(byt);
+                    if (uri.LocalPath.EndsWith(".png"))
+                    {
+                        PngBitmapEncoder png = new PngBitmapEncoder();
+                        png.Frames.Add(BitmapFrame.Create(uri));
+                        png.Save(ms);
+                    }
+                    else if (uri.LocalPath.EndsWith(".jpg"))
+                    {
+                        JpegBitmapEncoder jpg = new JpegBitmapEncoder();
+                        jpg.Frames.Add(BitmapFrame.Create(uri));
+                        jpg.Save(ms);
+                    }
+                    else if (uri.LocalPath.EndsWith(".bmp"))
+                    {
+                        BmpBitmapEncoder bmp = new BmpBitmapEncoder();
+                        bmp.Frames.Add(BitmapFrame.Create(uri));
+                        bmp.Save(ms);
+                    }
+                    ms.Flush();
+                    b.Pages.Add(ms.ToArray());
+                } */
             }), null);
 
-            string url_1 = url.Substring(0, url.NthIndexOf("-", 2) + 1);
-            string url_2 = url.Substring(url.NthIndexOf("/", 4));
+            string url_1 = null; 
+            string url_2 = null;
+            if (url.EndsWith(".html"))
+            {
+                //old style urls.
+                url_1 = url.Substring(0, url.NthIndexOf("-", 2) + 1);
+                url_2 = url.Substring(url.NthIndexOf("/", 4));
+            }
+            else
+            {
+                url_1 = url + "/";
+                url_2 = "";
+            }
             for (int i = 2; i < maxpages; i++)
             {
                 string purl = url_1 + i + url_2;
@@ -74,8 +111,35 @@ namespace MangaEplision.Sources.MangaReader
                 imgurl = Regex.Replace(imgurl, "(src=\"|\")", "");
                 System.Windows.Application.Current.Dispatcher.Invoke(new EmptyDelegate(delegate()
                 {
-                    var byt = new WebClient().DownloadData(imgurl);
-                    b.Pages.Add(byt);
+                    var uri = new Uri(imgurl);
+                    b.PageOnlineUrls.Add(uri);
+                    /*
+                    using (var ms = new MemoryStream())
+                    {
+                        
+
+                        if (uri.LocalPath.EndsWith(".png"))
+                        {
+                            PngBitmapEncoder png = new PngBitmapEncoder();
+                            png.Frames.Add(BitmapFrame.Create(uri, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default));
+                            png.Save(ms);
+                        }
+                        else if (uri.LocalPath.EndsWith(".jpg"))
+                        {
+                            JpegBitmapEncoder jpg = new JpegBitmapEncoder();
+                            jpg.Frames.Add(BitmapFrame.Create(uri, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default));
+                            jpg.Save(ms);
+                        }
+                        else if (uri.LocalPath.EndsWith(".bmp"))
+                        {
+                            BmpBitmapEncoder bmp = new BmpBitmapEncoder();
+                            bmp.Frames.Add(BitmapFrame.Create(uri, BitmapCreateOptions.PreservePixelFormat,BitmapCacheOption.Default));
+                            bmp.Save(ms);
+                        }
+                        ms.Flush();
+                        b.Pages.Add(ms.ToArray());
+                    }
+                     * */
                 }), null);
 
                 System.Threading.Thread.Sleep(100); //Prevent simulating a DDOS.

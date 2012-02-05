@@ -63,7 +63,9 @@ namespace MangaEplision.Base
             ParentManga = m;   
         }
         public Manga ParentManga { get; set; }
-        public Collection<byte[]> Pages { get; set; }
+        public Collection<object> Pages { get; set; }
+        public Collection<Uri> PageOnlineUrls { get; set; }
+        public Collection<string> PageLocalUrls { get; set; }
         public string Filename { get; set; }
     }
     [Serializable]
