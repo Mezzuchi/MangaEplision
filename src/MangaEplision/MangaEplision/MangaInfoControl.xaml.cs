@@ -57,7 +57,16 @@ namespace MangaEplision
                                                     collectionTab.UpdateLayout();
                                                     Global.LoadCollection();
                                                     var ls = ((ListView)((Grid)collectionTab.Content).FindName("CollectionListView"));
-                                                    ls.GetBindingExpression(ListView.ItemsSourceProperty).UpdateTarget();
+                                                    try
+                                                    {
+                                                        ls.GetBindingExpression(ListView.ItemsSourceProperty).UpdateTarget();
+                                                    }
+                                                    catch (Exception)
+                                                    {
+                                                        var source = ls.ItemsSource;
+                                                        ls.ItemsSource = null;
+                                                        ls.ItemsSource = Global.BookCollection;
+                                                    }
                                                     ipd.Close();
                                                 }
                                                 ));

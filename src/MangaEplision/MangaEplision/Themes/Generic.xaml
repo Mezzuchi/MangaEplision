@@ -32,6 +32,20 @@
                             <ContentPresenter ContentSource="Header" VerticalAlignment="Bottom" HorizontalAlignment="Left" TextBlock.FontSize="18" Margin="10 0 0 0"/>
                         </Grid>
                     </Border>
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="HeightBoard"  Duration="0:0:2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" BeginTime="0:0:0" AutoReverse="True">
+                            <DoubleAnimation By="0.4" From="{TemplateBinding Height}" To="{TemplateBinding AniHeight}"/>
+                        </Storyboard>
+                        <Storyboard x:Key="WidthBoard" Duration="0:0:2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" BeginTime="0:0:0" AutoReverse="True">
+                            <DoubleAnimation By="0.4" From="{TemplateBinding Width}" To="{TemplateBinding AniWidth}" />
+                        </Storyboard>
+                        <Storyboard x:Key="HeightBoardRev"  Duration="0:0:2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" BeginTime="0:0:0">
+                            <DoubleAnimation By="-0.4" To="{TemplateBinding Height}" From="{TemplateBinding AniHeight}"/>
+                        </Storyboard>
+                        <Storyboard x:Key="WidthBoardRev" Duration="0:0:2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" BeginTime="0:0:0">
+                            <DoubleAnimation By="-0.4" To="{TemplateBinding Width}" From="{TemplateBinding AniWidth}" />
+                        </Storyboard>
+                    </ControlTemplate.Resources>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsNumbersEnabled" Value="False">
                             <Setter TargetName="NumberPresenter" Property="Visibility" Value="Hidden"/>
@@ -52,16 +66,12 @@
                         </MultiTrigger>-->
                         <Trigger Property="IsMouseOver" Value="True">  
                             <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard Duration="0:0:2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" BeginTime="0:0:0" AutoReverse="True">
-                                        <DoubleAnimation By="0.08" />
-                                    </Storyboard>
+                                <!--<BeginStoryboard>
+                                    
                                 </BeginStoryboard>
                                 <BeginStoryboard>
-                                    <Storyboard Duration="0:0:2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" BeginTime="0:0:0" AutoReverse="True">
-                                        <DoubleAnimation By="0.08" />
-                                    </Storyboard>
-                                </BeginStoryboard>
+                                    
+                                </BeginStoryboard>-
                                 <BeginStoryboard>
                                     <Storyboard Duration="0:0:2" BeginTime="0:0:0" AutoReverse="True" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.X)">
                                         <DoubleAnimation By="-10" />
@@ -71,7 +81,7 @@
                                     <Storyboard Duration="0:0:2" BeginTime="0:0:0" AutoReverse="True" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)">
                                         <DoubleAnimation By="-10" />
                                     </Storyboard>
-                                </BeginStoryboard>
+                                </BeginStoryboard>-->
                             </Trigger.EnterActions>
                         </Trigger>
                     </ControlTemplate.Triggers>

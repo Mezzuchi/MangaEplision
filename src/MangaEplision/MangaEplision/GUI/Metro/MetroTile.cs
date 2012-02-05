@@ -11,6 +11,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Media.Animation;
+using System.Timers;
 
 namespace MangaEplision.Metro
 {
@@ -48,6 +50,17 @@ namespace MangaEplision.Metro
         public MetroTile()
         {
             base.MouseLeftButtonUp += new MouseButtonEventHandler(MetroButton_MouseLeftButtonUp);
+            base.SizeChanged += new SizeChangedEventHandler(MetroTile_SizeChanged);
+
+
+
+        }
+
+
+        void MetroTile_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            AniHeight = ActualHeight + 20;
+            AniWidth = ActualWidth + 20;
         }
         void MetroButton_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -55,6 +68,8 @@ namespace MangaEplision.Metro
         }
         ~MetroTile()
         {
+            
+            base.SizeChanged -= new SizeChangedEventHandler(MetroTile_SizeChanged);
             base.MouseLeftButtonUp -= new MouseButtonEventHandler(MetroButton_MouseLeftButtonUp);
         }
         static MetroTile()
@@ -103,5 +118,32 @@ namespace MangaEplision.Metro
             add { AddHandler(ClickEvent, value); }
             remove { RemoveHandler(ClickEvent, value); }
         }
+
+        public double AniHeight
+        {
+            get
+            {
+                return (double)Dispatcher.Invoke(
+                    new EmptyReturnDelegate(() =>
+                  {
+                      return this.GetValue(AniHeightProperty) == null ? 0 : this.GetValue(AniHeightProperty);
+                  }));
+            }
+            set { this.SetValue(AniHeightProperty, value); }
+        }
+        public static readonly DependencyProperty AniHeightProperty = DependencyProperty.Register(
+          "AniHeight", typeof(double), typeof(MetroTile));
+
+        public double AniWidth
+        {
+            get
+            {
+                return (double)Dispatcher.Invoke(
+                    new EmptyDelegate(() => this.GetValue(AniWidthProperty)));
+            }
+            set { this.SetValue(AniWidthProperty, value); }
+        }
+        public static readonly DependencyProperty AniWidthProperty = DependencyProperty.Register(
+          "AniWidth", typeof(double), typeof(MetroTile));
     }
 }

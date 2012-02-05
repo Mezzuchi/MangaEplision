@@ -4,7 +4,7 @@
         xmlns:mitsu="clr-namespace:WPFMitsuControls;assembly=WPFMitsuControls"
         xmlns:convert="clr-namespace:MangaEplision.Converters"
         xmlns:metro="clr-namespace:MangaEplision.Metro"
-        Title="{Binding Name}" Height="427" Width="668" Background="Black" WindowState="Maximized" WindowStyle="SingleBorderWindow" ResizeMode="CanMinimize">
+        Title="{Binding Name}" Height="Auto" Width="Auto" Background="Black" WindowState="Maximized" WindowStyle="SingleBorderWindow" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary>
             <convert:ImageUriToBookPageConverter x:Key="IBPCon"/>

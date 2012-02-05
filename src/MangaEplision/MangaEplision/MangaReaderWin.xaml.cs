@@ -26,6 +26,34 @@ namespace MangaEplision
             InitializeComponent();
             this.Loaded += MangaReaderWin_Loaded;
             this.SizeChanged += new SizeChangedEventHandler(MangaReaderWin_SizeChanged);
+            this.KeyDown += new KeyEventHandler(MangaReaderWin_KeyDown);
+        }
+
+        void MangaReaderWin_KeyDown(object sender, KeyEventArgs e)
+        {
+           if (e.Key == Key.Left)
+            {
+                try
+                {
+                    BookControl.AnimateToPreviousPage(true, 700);
+                }
+                catch (Exception)
+                {
+                }
+                return;
+            }
+
+            if (e.Key == Key.Right)
+            {
+                try
+                {
+                    BookControl.AnimateToNextPage(true, 700);
+                }
+                catch (Exception)
+                {
+                }
+                return;
+            }
         }
 
         void MangaReaderWin_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -228,8 +228,6 @@ namespace MangaEplision
         public static readonly DependencyProperty BookCollectionProperty = DependencyProperty.Register("BookCollection", typeof(List<Book>), typeof(Global));
         #endregion
 
-        private delegate object EmptyReturnDelegate();
-        private delegate void EmptyDelegate();
         private static void LoadSource()
         {
             MangaSource = new MangaEplision.Sources.MangaReader.MangaReaderSource(true);
@@ -320,4 +318,5 @@ namespace MangaEplision
         }
     }
     public delegate void EmptyDelegate();
+    public delegate object EmptyReturnDelegate();
 }
