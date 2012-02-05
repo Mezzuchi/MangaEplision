@@ -25,8 +25,17 @@ namespace MangaEplision
         {
             InitializeComponent();
             this.Loaded += MangaReaderWin_Loaded;
+            this.SizeChanged += new SizeChangedEventHandler(MangaReaderWin_SizeChanged);
         }
 
+        void MangaReaderWin_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            updateBookDisplay();
+        }
+        void updateBookDisplay()
+        {
+            BookControl.GetBindingExpression(WPFMitsuControls.Book.ItemsSourceProperty).UpdateTarget(); //Causes flicking but it'll do.
+        }
         void MangaReaderWin_Loaded(object sender, RoutedEventArgs e)
         {
           /*  var bk = (MangaEplision.Base.Book)this.DataContext;
@@ -58,11 +67,12 @@ namespace MangaEplision
             {
 
             }
+            updateBookDisplay();
         }
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
         {
-            BookControl.CurrentPage = WPFMitsuControls.BookCurrentPage.RightSheet;
+            //BookControl.CurrentPage = WPFMitsuControls.BookCurrentPage.LeftSheet;
 
             try
             {
@@ -72,6 +82,8 @@ namespace MangaEplision
             {
 
             }
+            updateBookDisplay();
+            this.InvalidateMeasure();
         }
     }
 }

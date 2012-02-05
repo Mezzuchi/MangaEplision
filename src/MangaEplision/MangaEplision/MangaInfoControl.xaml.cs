@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Effects;
 using MangaEplision.Base;
+using MangaEplision.Metro;
 
 namespace MangaEplision
 {
@@ -51,7 +52,15 @@ namespace MangaEplision
                                         (Manga)this.DataContext, be, () =>
                                         {
                                             Dispatcher.Invoke(new EmptyDelegate(() =>
-                                                ipd.Close()));
+                                                {
+                                                    var collectionTab = ((MetroTabItem)((MainWindow)Application.Current.MainWindow).metroTabControl1.Items[1]);
+                                                    collectionTab.UpdateLayout();
+                                                    Global.LoadCollection();
+                                                    var ls = ((ListView)((Grid)collectionTab.Content).FindName("CollectionListView"));
+                                                    ls.GetBindingExpression(ListView.ItemsSourceProperty).UpdateTarget();
+                                                    ipd.Close();
+                                                }
+                                                ));
                                         });
                     //
                 }

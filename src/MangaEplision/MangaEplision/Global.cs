@@ -173,7 +173,7 @@ namespace MangaEplision
 
         }
 
-        private static void LoadCollection()
+        internal static void LoadCollection()
         {
             BinaryFormatter bf = new BinaryFormatter();
 

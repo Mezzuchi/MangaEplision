@@ -3,7 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:metro="clr-namespace:MangaEplision.Metro"
         xmlns:me="clr-namespace:MangaEplision"
-        Title="MangaEplision" Height="612" Width="853" WindowStartupLocation="CenterScreen" Background="AliceBlue">
+        Title="MangaEplision" Height="612" Width="853" WindowStartupLocation="CenterScreen" Background="AliceBlue" x:Name="this" xmlns:my="clr-namespace:MangaEplision.Converters">
+    <metro:MetroWindow.Resources>
+        <my:IntCalcConverter x:Key="IntCalcConverter1" />
+    </metro:MetroWindow.Resources>
     <!--<metro:MetroWindow.Background>
         <RadialGradientBrush>
             <GradientStop Color="AliceBlue" Offset="0"/>
@@ -11,8 +14,8 @@
         </RadialGradientBrush>
     </metro:MetroWindow.Background>-->
     <Grid>
-        <metro:MetroTabControl x:Name="metroTabControl1">
-            <metro:MetroTabItem Header="Dashboard">
+        <metro:MetroTabControl x:Name="metroTabControl1" Height="Auto" Width="Auto">
+            <metro:MetroTabItem Header="Dashboard" x:Name="DashboardTab">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="679*" />
@@ -24,7 +27,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="300*"/>
                                 </Grid.RowDefinitions>
-                            <ListBox Background="Transparent" Name="CatalogListBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Height="490" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                            <ListBox Background="Transparent" Name="CatalogListBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <ContentPresenter Content="{Binding}"/>

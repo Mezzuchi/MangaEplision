@@ -28,45 +28,18 @@ namespace MangaEplision
             InitializeComponent();
             this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
             this.StateChanged += new EventHandler(MainWindow_StateChanged);
-
-            winState = System.Windows.WindowState.Normal;
-            winNormalCTLBSize = CatalogListBox.Height;
-
-            winMaxCTLBSize = metroTabControl1.ActualHeight + 100;
+            this.SizeChanged += new SizeChangedEventHandler(MainWindow_SizeChanged);
         }
 
-        private WindowState winState;
-        private double winNormalCTLBSize = 0;
-        private double winMaxCTLBSize = 0;
+        void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2;
+        }
+
+
         void MainWindow_StateChanged(object sender, EventArgs e)
         {
-            if (this.WindowState == System.Windows.WindowState.Normal)
-            {
-                CatalogListBox.Height = winNormalCTLBSize;
 
-                winState = System.Windows.WindowState.Normal;
-            }
-            else if (this.WindowState == System.Windows.WindowState.Maximized)
-            {
-                CatalogListBox.Height = winMaxCTLBSize;
-
-                winState = System.Windows.WindowState.Maximized;
-            }
-            else
-            {
-                if (winState == System.Windows.WindowState.Normal)
-                {
-                    CatalogListBox.Height = metroTabControl1.ActualHeight - 300;
-
-                    winState = System.Windows.WindowState.Normal;
-                }
-                else if (winState == System.Windows.WindowState.Maximized)
-                {
-                    CatalogListBox.Height = metroTabControl1.ActualHeight + 100;
-
-                    winState = System.Windows.WindowState.Maximized;
-                }
-            }
 
         }
 

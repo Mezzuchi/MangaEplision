@@ -4,7 +4,7 @@
         xmlns:mitsu="clr-namespace:WPFMitsuControls;assembly=WPFMitsuControls"
         xmlns:convert="clr-namespace:MangaEplision.Converters"
         xmlns:metro="clr-namespace:MangaEplision.Metro"
-        Title="{Binding Name}" Height="427" Width="668" Background="Black">
+        Title="{Binding Name}" Height="427" Width="668" Background="Black" WindowState="Maximized" WindowStyle="SingleBorderWindow" ResizeMode="CanMinimize">
     <Window.Resources>
         <ResourceDictionary>
             <convert:ImageUriToBookPageConverter x:Key="IBPCon"/>
@@ -14,17 +14,17 @@
     </Window.Resources>
     <Grid>
         <Grid Panel.ZIndex="70">
-            <mitsu:Book x:Name="BookControl" Height="Auto" Width="Auto" ItemsSource="{Binding Path=PageLocalUrls,Converter={StaticResource ImageByteToBookPageConverter1}, IsAsync=True}">
+            <mitsu:Book x:Name="BookControl" Height="Auto" Width="Auto" ItemsSource="{Binding Path=PageLocalUrls,Converter={StaticResource ImageByteToBookPageConverter1}}">
 
             </mitsu:Book>
         </Grid>
-        <Grid Opacity="70" Height="54" VerticalAlignment="Bottom" Panel.ZIndex="100" Margin="69,0,72,0">
-            <Grid.Background>
+        <Grid Opacity="95" Height="54" VerticalAlignment="Bottom" Panel.ZIndex="100" Margin="69,0,72,0">
+            <!--<Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Color="Black" Offset="1"/>
                     <GradientStop Color="Gray" Offset="0"/>
                 </LinearGradientBrush>
-            </Grid.Background>
+            </Grid.Background>-->
             <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="76,16,0,0" x:Name="previousBtn" VerticalAlignment="Top" Click="previousBtn_Click"/>
             <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="107,16,0,0" x:Name="nextBtn" VerticalAlignment="Top" Click="nextBtn_Click"/>
             <Slider Height="23" Margin="138,18,110,0" Name="slider1" VerticalAlignment="Top" Minimum="0" Value="{Binding ElementName=BookControl,Path=CurrentSheetIndex,Mode=TwoWay}" Maximum="{Binding ElementName=BookControl,Path=ItemsSource.Count}" />
