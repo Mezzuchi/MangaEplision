@@ -33,7 +33,7 @@ namespace MangaEplision.Sources.MangaReader
         {
             mangas = preloadeddict;
         }
-        public Book GetBook(Manga mag, BookEntry chapter)
+        public Book GetBook(Manga mag, BookEntry chapter, Action<int,int> progressHandler = null)
         {
             Book b = new Book(mag);
             b.Name = chapter.Name;
@@ -103,6 +103,9 @@ namespace MangaEplision.Sources.MangaReader
             }
             for (int i = 2; i < maxpages; i++)
             {
+                if (progressHandler != null)
+                    progressHandler(i, maxpages);
+
                 string purl = url_1 + i + url_2;
                 string html = GetHtml(purl);
 

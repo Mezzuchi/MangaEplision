@@ -148,7 +148,7 @@ namespace MangaEplision
                                         }));
                         Global.DownloadMangaBook(q.Manga, q.Book, () =>
                         {
-                            q.Downloding = false; q.Status = QueueStatus.Compleated; /* DlQueue.Remove(q); */ Dispatcher.Invoke(new EmptyDelegate(() =>
+                            q.Downloding = false; q.Status = QueueStatus.Completed; /* DlQueue.Remove(q); */ Dispatcher.Invoke(new EmptyDelegate(() =>
                                         {
                                             DlQueueList.ItemsSource = DlQueue;
                                             DlQueueList.Items.Refresh();

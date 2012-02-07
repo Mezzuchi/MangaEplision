@@ -31,7 +31,7 @@ namespace MangaEplision
     {
         Queued,
         Downloading,
-        Compleated,
+        Completed,
         Failure,
     }
 }
