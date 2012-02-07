@@ -68,7 +68,8 @@ namespace MangaEplision
             Application.Current.DispatcherUnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(Global.Current_DispatcherUnhandledException);
         }
         private delegate void EmptyDelegate();
-
+        private delegate void UpdateDelegate(int Current, int Total);
+        private delegate void QueueUpDelegate(QueueItem q);
         private void viewInfoTile_Click(object sender, RoutedEventArgs e)
         {
             if (CatalogListBox.SelectedItems.Count == 0)
@@ -124,6 +125,7 @@ namespace MangaEplision
                     DlQueue.Add(qi);
                     DlQueueList.ItemsSource = DlQueue;
                     DlQueueList.Items.Refresh();
+                    QueueStatuslbl.Content = string.Format("There Are currently {0} Items in your Queue",DlQueue.Count);
                 }
             }
         }
@@ -141,18 +143,29 @@ namespace MangaEplision
                     {
                         q.Downloding = true;
                         q.Status = QueueStatus.Downloading;
-                        Dispatcher.Invoke(new EmptyDelegate(() =>
+                        Dispatcher.Invoke(new QueueUpDelegate((qi) =>
                                         {
+                                            QueueStatuslbl.Content = string.Format("Downloading {1}", DlQueue.Count, q.Name);
                                             DlQueueList.ItemsSource = DlQueue;
                                             DlQueueList.Items.Refresh();
-                                        }));
+                                        }),q);
                         Global.DownloadMangaBook(q.Manga, q.Book, () =>
                         {
-                            q.Downloding = false; q.Status = QueueStatus.Compleated; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
-                                        {
-                                            DlQueueList.ItemsSource = DlQueue;
-                                            DlQueueList.Items.Refresh();
-                                        }));
+                            q.Downloding = false; q.Status = QueueStatus.Completed; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
+                            {
+                                DlQueueList.ItemsSource = DlQueue;
+                                DlQueueList.Items.Refresh();
+                                QueueStatuslbl.Content = string.Format("Done! {0} Items Left in Queue", DlQueue.Count);
+                                
+                            }));
+                        }, (curr, total) => 
+                        {
+                            Dispatcher.Invoke(new UpdateDelegate((cur, tot) =>
+                            {
+                                int precent = ((cur * 100) / tot);
+                                CurrProg.Value = precent;
+                                Count.Content = string.Format("{0}%", precent);
+                            }), curr, total);
                         });
                         while (q.Downloding)
                             System.Threading.Thread.Sleep(30000);

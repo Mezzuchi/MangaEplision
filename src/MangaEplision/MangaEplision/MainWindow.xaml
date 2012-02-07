@@ -14,6 +14,10 @@
         </RadialGradientBrush>
     </metro:MetroWindow.Background>-->
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
         <metro:MetroTabControl x:Name="metroTabControl1" Height="Auto" Width="Auto">
             <metro:MetroTabItem Header="Dashboard" x:Name="DashboardTab">
                 <Grid>
@@ -76,5 +80,27 @@
                 </Grid>
             </metro:MetroTabItem>
         </metro:MetroTabControl>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="2" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Column="1" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Name="QueueStatuslbl" Content="Your Queue is Empty" Grid.Column="0"  Grid.ColumnSpan="2"/>
+                <ProgressBar Name="CurrProg" Grid.Column="2"  Height="20"/>
+                <Label Name="Count" Grid.Column="2"  Content="0%" Margin="127,0,0,0" />
+            </Grid>
+        </Grid>
     </Grid>
 </metro:MetroWindow>

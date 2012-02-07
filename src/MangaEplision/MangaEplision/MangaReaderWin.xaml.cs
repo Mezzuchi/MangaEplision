@@ -83,6 +83,8 @@ namespace MangaEplision
                 this.Background = new ImageBrush(img);
                 var p = 0;
             }*/
+            this.MinHeight = this.ActualHeight;
+            this.MinWidth = this.ActualWidth;
         }
 
         private void previousBtn_Click(object sender, RoutedEventArgs e)
