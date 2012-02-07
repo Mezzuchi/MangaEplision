@@ -1,0 +1,10 @@
+﻿<metro:MetroWindow x:Class="MangaEplision.NotificationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:metro="clr-namespace:MangaEplision.Metro"
+        xmlns:me="clr-namespace:MangaEplision"
+        Title="Notification!" Height="100" Width="250" ResizeMode="CanMinimize" WindowStartupLocation="Manual">
+    <Grid>
+        
+    </Grid>
+</metro:MetroWindow>

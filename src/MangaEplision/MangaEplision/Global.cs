@@ -437,6 +437,14 @@ namespace MangaEplision
                     }
                 });
         }
+        internal static void DisplayNotification(string Message, string Title = "Notification!", int Duration = 5000)
+        {
+            Task.Factory.StartNew(() =>
+                {
+                    NotificationWindow nw = new NotificationWindow();
+                    nw.Show(Message, Title, Duration);
+                });
+        }
     }
     public delegate void EmptyDelegate();
     public delegate object EmptyReturnDelegate();
