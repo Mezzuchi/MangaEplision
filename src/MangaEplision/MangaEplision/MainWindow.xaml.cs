@@ -156,13 +156,14 @@ namespace MangaEplision
                                 DlQueueList.ItemsSource = DlQueue;
                                 DlQueueList.Items.Refresh();
                                 QueueStatuslbl.Content = string.Format("Done! {0} Items Left in Queue", DlQueue.Count);
-                                
+                                CurrProg.Value = 0;
+                                Count.Content = string.Format("{0}%", 0);
                             }));
-                        }, (curr, total) => 
+                        }, (curr, total) =>
                         {
                             Dispatcher.Invoke(new UpdateDelegate((cur, tot) =>
                             {
-                                int precent = ((cur * 100) / tot);
+                                int precent = ((((cur < tot) ? cur+1 : cur) * 100) / tot);
                                 CurrProg.Value = precent;
                                 Count.Content = string.Format("{0}%", precent);
                             }), curr, total);

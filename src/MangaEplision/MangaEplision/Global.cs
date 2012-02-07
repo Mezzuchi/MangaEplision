@@ -33,19 +33,15 @@ namespace MangaEplision
 
             CollectionDir = DataDir + "\\Collection\\";
             CacheDir = DataDir + "\\Cache\\";
-
             if (!Directory.Exists(CollectionDir))
                 Directory.CreateDirectory(CollectionDir);
-
             if (!Directory.Exists(CacheDir))
                 Directory.CreateDirectory(CacheDir);
-
-
             CachedManga = new List<Manga>();
 
+            
+
             LoadCachedManga();
-
-
             fswatch = new FileSystemWatcher(CollectionDir);
 
             fswatch.EnableRaisingEvents = true;
@@ -109,6 +105,45 @@ namespace MangaEplision
             else
             {
                 LoadCatalog(true);
+            }
+        }
+        public static Manga GetMangaInfo(string name)
+        {
+            var first = CachedManga.Find((m) => m.MangaName.ToLower() == name.ToLower());
+            if (first != null)
+                return first;
+            else
+            {
+                var book = MangaSource.GetMangaInfo(name);
+                CachedManga.Add(book); //For future fetches during this runtime.
+
+                using (var fs = new FileStream(CacheDir + book.MangaName.CommonReplace() + ".bin", FileMode.Create))
+                {
+                    var bf = new BinaryFormatter();
+                    bf.Serialize(fs, book);
+                }
+
+                return book;
+            }
+
+        }
+
+        public static List<Manga> CachedManga { get; private set; }
+
+        public static void LoadCachedManga()
+        {
+            foreach (var file in Directory.GetFiles(CacheDir, "*.bin"))
+            {
+                try
+                {
+                    using (var fs = new FileStream(file, FileMode.Open))
+                    {
+                        var bf = new BinaryFormatter();
+                        var book = (Manga)bf.Deserialize(fs);
+                        CachedManga.Add(book);
+                    }
+                }
+                catch (Exception) { }
             }
         }
 
@@ -201,7 +236,7 @@ namespace MangaEplision
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Unable to load book from collection!" + Environment.NewLine + "File: " + file);
+                    MessageBox.Show("Unable to load book from collection!" + Environment.NewLine + "File: " + file + Environment.NewLine + "This book may be corrupted, Please delete the book and retry the download");
                 }
                 finally
                 {
@@ -260,49 +295,6 @@ namespace MangaEplision
         public static string[] Mangas { get; private set; }
         public static Dictionary<string, string> MangaDictionary { get; private set; }
         public static IMangaSource MangaSource { get; private set; }
-
-        #region Cached Manga
-        public static Manga GetMangaInfo(string name)
-        {
-            var first = CachedManga.Find((m) => m.MangaName.ToLower() == name.ToLower());
-            if (first != null)
-                return first;
-            else
-            {
-                var book = MangaSource.GetMangaInfo(name);
-                CachedManga.Add(book); //For future fetches during this runtime.
-
-                using (var fs = new FileStream(CacheDir + book.MangaName.CommonReplace() + ".bin", FileMode.Create))
-                {
-                    var bf = new BinaryFormatter();
-                    bf.Serialize(fs, book);
-                }
-
-                return book;
-            }
-
-        }
-
-        public static List<Manga> CachedManga { get; private set; }
-
-        public static void LoadCachedManga()
-        {
-            foreach (var file in Directory.GetFiles(CacheDir, "*.bin"))
-            {
-                try
-                {
-                    using (var fs = new FileStream(file,FileMode.Open))
-                    {
-                        var bf = new BinaryFormatter();
-                        var book = (Manga)bf.Deserialize(fs);
-                        CachedManga.Add(book);
-                    }
-                }
-                catch (Exception) { }
-            }
-        }
-        #endregion
-
         public static bool GetBookExist(Manga manga, BookEntry book)
         {
             var firstcheck = File.Exists(CollectionDir + "\\" + manga.MangaName + "\\" + book.Name.CommonReplace() + "\\" + book.Name.CommonReplace() + ".bin");

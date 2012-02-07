@@ -49,7 +49,7 @@ namespace MangaEplision
                     ((MainWindow)Application.Current.MainWindow).AddToQueue((BookEntry)BooksLsView.SelectedItem, (MangaEplision.Base.Manga)this.DataContext);
                     ((MainWindow)Application.Current.MainWindow).CallStartQueueProcess();
                 }
-                ((MainWindow)Application.Current.MainWindow).metroTabControl1.SelectedIndex = 3;
+                ((MainWindow)Application.Current.MainWindow).metroTabControl1.SelectedIndex = 2;
             }
         }
     }
