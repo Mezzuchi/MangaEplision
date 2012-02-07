@@ -71,7 +71,7 @@ namespace MangaEplision
                     {
                         BinaryFormatter binf = new BinaryFormatter();
 
-                        //LoadSource();
+                        LoadSource();
 
                         var fs = new FileStream(CatalogFilename, FileMode.Create);
                         var dict = MangaSource.GetAvailableManga();
@@ -85,7 +85,7 @@ namespace MangaEplision
                             {
                                 prog.Close();
                             }));
-                        LoadCatalog();
+                        LoadCatalog(false);
                     }).Wait();
                 }
                 else
@@ -232,7 +232,7 @@ namespace MangaEplision
         {
             MangaSource = new MangaEplision.Sources.MangaReader.MangaReaderSource(true);
         }
-        private static void LoadCatalog()
+        private static void LoadCatalog(bool loadsource = false)
         {
             BinaryFormatter binf = new BinaryFormatter();
 
@@ -240,7 +240,7 @@ namespace MangaEplision
             MangaDictionary = (Dictionary<string, string>)binf.Deserialize(fs);
             Mangas = MangaDictionary.Keys.ToArray();
 
-            if (MangaSource == null)
+            if (MangaSource == null && loadsource == true)
                 MangaSource = new MangaEplision.Sources.MangaReader.MangaReaderSource(MangaDictionary);
 
             fs.Close();

@@ -65,6 +65,7 @@ namespace MangaEplision
                                                     {
                                                         var source = ls.ItemsSource;
                                                         ls.ItemsSource = null;
+                                                        ls.InvalidateMeasure();
                                                         ls.ItemsSource = Global.BookCollection;
                                                     }
                                                     ipd.Close();
