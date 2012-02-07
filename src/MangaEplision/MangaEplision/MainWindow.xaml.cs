@@ -52,7 +52,6 @@ namespace MangaEplision
                 {
                     System.Threading.Thread.Sleep(1000);
                     Global.Initialize();
-
                     Dispatcher.Invoke(
                         new EmptyDelegate(
                         () =>
@@ -62,9 +61,21 @@ namespace MangaEplision
                                 CatalogListBox.ItemsSource = Global.Mangas;
                                 metroGroupBox1.NotificationsCount = Global.Mangas.Length;
                             }
+                            if (Global.SavedQueue())
+                            {
+                                Global.LoadQueue(ref DlQueue);
+                                DlQueueList.ItemsSource = DlQueue;
+                                DlQueueList.Items.Refresh();
+                                QueueStatuslbl.Content = string.Format("There Are currently {0} Items in your Queue", DlQueue.Count);
+                                if (DlQueue.Count > 0)
+                                    CallStartQueueProcess();
+
+                                Global.CleanupQueueDir();
+                            }
                         }));
                 });
-            Application.Current.Exit += new ExitEventHandler(Global.Current_Exit);
+            Application.Current.Exit += new ExitEventHandler((o, er) => { Global.Current_Exit(o, er); });
+            this.Closing += new System.ComponentModel.CancelEventHandler((s, er) => { Global.SaveQueue(this.DlQueue); });
             Application.Current.DispatcherUnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(Global.Current_DispatcherUnhandledException);
         }
         private delegate void EmptyDelegate();
