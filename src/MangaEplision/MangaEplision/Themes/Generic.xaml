@@ -484,13 +484,13 @@
                             <Grid HorizontalAlignment="Right" Width="Auto" Margin="40 0 -40 0">
                                 <StackPanel Height="40" Width="300" Margin="40 0 -40 0" Orientation="Horizontal">
                                     <Grid Name="PART_MinBtn" Margin="0 -2 0 0">
-                                        <Label Content="Minimize" FontSize="17" FontFamily="Segoe UI" Foreground="Black"/>
+                                        <Label Content="Minimize" FontSize="17" FontFamily="Segoe UI" Cursor="Hand" Foreground="Black"/>
                                     </Grid>
                                     <Grid  Name="PART_MaxBtn" Margin="0 -2 0 0">
-                                        <Label Content="Maximize" FontSize="17" FontFamily="Segoe UI" Foreground="Black" />
+                                            <Label Content="Maximize" FontSize="17" FontFamily="Segoe UI" Cursor="Hand" Foreground="Black" />
                                     </Grid>
                                     <Grid Name="PART_CloseBtn" Margin="0 -2 0 0">
-                                        <Label Content="Close" FontSize="17" FontFamily="Segoe UI" Foreground="Red"/>
+                                            <Label Content="Close" FontSize="17" FontFamily="Segoe UI" Cursor="Hand" Foreground="Red"/>
                                     </Grid>
                                 </StackPanel>
                             </Grid>
