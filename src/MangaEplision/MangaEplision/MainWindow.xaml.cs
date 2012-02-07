@@ -81,7 +81,7 @@ namespace MangaEplision
                 string name = CatalogListBox.SelectedItem.ToString();
                 var task = Task.Factory.StartNew(() =>
                     {
-                        info = Global.MangaSource.GetMangaInfo(name);
+                        info = Global.GetMangaInfo(name);
                     }).ContinueWith((tsk) =>
                         {
                             if (tsk.Exception == null)
