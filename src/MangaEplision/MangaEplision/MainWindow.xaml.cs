@@ -37,7 +37,7 @@ namespace MangaEplision
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (metroBanner.Visibility == System.Windows.Visibility.Collapsed)
-                CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2;
+            CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2;
             else if (metroBanner.Visibility == System.Windows.Visibility.Visible) ;
             CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2 - metroBanner.ActualHeight;
         }
@@ -56,7 +56,6 @@ namespace MangaEplision
                 {
                     System.Threading.Thread.Sleep(1000);
                     Global.Initialize();
-
                     Dispatcher.Invoke(
                         new EmptyDelegate(
                         () =>
@@ -65,6 +64,17 @@ namespace MangaEplision
                             {
                                 CatalogListBox.ItemsSource = Global.Mangas;
                                 metroGroupBox1.NotificationsCount = Global.Mangas.Length;
+                            }
+                            if (Global.SavedQueue())
+                            {
+                                Global.LoadQueue(ref DlQueue);
+                                DlQueueList.ItemsSource = DlQueue;
+                                DlQueueList.Items.Refresh();
+                                QueueStatuslbl.Content = string.Format("There Are currently {0} Items in your Queue", DlQueue.Count);
+                                if (DlQueue.Count > 0)
+                                    CallStartQueueProcess();
+
+                                Global.CleanupQueueDir();
                             }
                         }));
                 }).ContinueWith((task) =>
@@ -94,7 +104,8 @@ namespace MangaEplision
                                     }
                                 }));
                     });
-            Application.Current.Exit += new ExitEventHandler(Global.Current_Exit);
+            Application.Current.Exit += new ExitEventHandler((o, er) => { Global.Current_Exit(o, er); });
+            this.Closing += new System.ComponentModel.CancelEventHandler((s, er) => { Global.SaveQueue(this.DlQueue); });
             Application.Current.DispatcherUnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(Global.Current_DispatcherUnhandledException);
 
 

@@ -23,20 +23,22 @@ namespace MangaEplision
         public static string CatalogFilename = null;
         public static string CollectionDir = null;
         public static string CacheDir = null;
+        public static string QueueDir = null;
         public static void Initialize()
         {
 
             DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MangaEplision";
-
             if (!Directory.Exists(DataDir))
                 Directory.CreateDirectory(DataDir);
-
             CollectionDir = DataDir + "\\Collection\\";
             CacheDir = DataDir + "\\Cache\\";
             if (!Directory.Exists(CollectionDir))
                 Directory.CreateDirectory(CollectionDir);
             if (!Directory.Exists(CacheDir))
                 Directory.CreateDirectory(CacheDir);
+            QueueDir = DataDir + "\\Queue\\";
+            if (!Directory.Exists(QueueDir))
+                Directory.CreateDirectory(QueueDir);
             CachedManga = new List<Manga>();
 
             
@@ -354,6 +356,9 @@ namespace MangaEplision
                     }
                     catch (Exception ex)
                     {
+#if DEBUG
+                        System.Diagnostics.Debug.Write(ex);
+#endif
                     }
                 }).ContinueWith((tsk) =>
                     {
@@ -361,6 +366,76 @@ namespace MangaEplision
                             act();
                     });
 
+        }
+
+        internal static void SaveQueue(List<QueueItem> list)
+        {
+                    try
+                    {
+                        BinaryFormatter bf = new BinaryFormatter();
+                        foreach(QueueItem q in list)
+                        {
+                            using (var fs = new FileStream(QueueDir + "\\" + q.Name.CommonReplace() + ".bin", FileMode.Create))
+                            {
+                                bf.Serialize(fs, q);
+                                fs.Close();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+#if DEBUG
+                        System.Diagnostics.Debug.Write(ex);
+#endif
+                    }
+
+        }
+        internal static bool SavedQueue()
+        {
+            if (Directory.Exists(QueueDir))
+                return true;
+            return false;
+        }
+
+        internal static void LoadQueue(ref List<QueueItem> DlQueue)
+        {
+            try
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                foreach (string f in Directory.EnumerateFiles(QueueDir))
+                {
+                    var fs = new FileStream(f, FileMode.Open);
+                    DlQueue.Add((QueueItem)bf.Deserialize(fs));
+                    fs.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                System.Diagnostics.Debug.Write(ex);
+#endif
+            }
+
+        }
+
+        internal static void CleanupQueueDir()
+        {
+            Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        foreach (string f in Directory.EnumerateFiles(QueueDir))
+                        {
+                            File.Delete(f);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+#if DEBUG
+                        System.Diagnostics.Debug.Write(ex);
+#endif
+                    }
+                });
         }
     }
     public delegate void EmptyDelegate();

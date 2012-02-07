@@ -8,6 +8,7 @@ using System.Windows.Threading;
 
 namespace MangaEplision
 {
+    [Serializable]
     class QueueItem
     {
        public BookEntry Book { get; set; }
