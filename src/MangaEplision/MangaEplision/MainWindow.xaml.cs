@@ -119,7 +119,7 @@ namespace MangaEplision
             if (DlQueue != null)
             {
                 QueueItem qi = new QueueItem(bookEntry, manga);
-                if (!DlQueue.Contains(qi))
+                if (!DlQueue.Contains(qi) && !Global.GetBookExist(qi.Manga, qi.Book))
                 {
                     DlQueue.Add(qi);
                     DlQueueList.ItemsSource = DlQueue;
@@ -148,7 +148,7 @@ namespace MangaEplision
                                         }));
                         Global.DownloadMangaBook(q.Manga, q.Book, () =>
                         {
-                            q.Downloding = false; q.Status = QueueStatus.Compleated; /* DlQueue.Remove(q); */ Dispatcher.Invoke(new EmptyDelegate(() =>
+                            q.Downloding = false; q.Status = QueueStatus.Compleated; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
                                         {
                                             DlQueueList.ItemsSource = DlQueue;
                                             DlQueueList.Items.Refresh();
