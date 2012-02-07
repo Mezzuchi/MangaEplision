@@ -51,6 +51,12 @@ namespace MangaEplision
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+            {
+                //if Win7
+                this.TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
+            }
+
 
             Task.Factory.StartNew(() =>
                 {
@@ -226,14 +232,28 @@ namespace MangaEplision
                                 QueueStatuslbl.Content = string.Format("Done! {0} Items Left in Queue", DlQueue.Count);
                                 CurrProg.Value = 0;
                                 Count.Content = string.Format("{0}%", 0);
+
+                                if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+                                {
+                                    //if Win7
+                                    this.TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
+                                    this.TaskbarItemInfo.ProgressValue = 0;
+                                }
                             }));
                         }, (curr, total) =>
                         {
                             Dispatcher.Invoke(new UpdateDelegate((cur, tot) =>
                             {
-                                int precent = ((((cur < tot) ? cur + 1 : cur) * 100) / tot);
-                                CurrProg.Value = precent;
-                                Count.Content = string.Format("{0}%", precent);
+                                int percent = ((((cur < tot) ? cur + 1 : cur) * 100) / tot);
+                                CurrProg.Value = percent;
+                                Count.Content = string.Format("{0}%", percent);
+
+                                if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+                                {
+                                    //if Win7
+                                    this.TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal;
+                                    this.TaskbarItemInfo.ProgressValue = (double)percent / 100;
+                                }
                             }), curr, total);
                         });
                         while (q.Downloading)
