@@ -39,8 +39,10 @@
                     </Grid>
                     <Grid Grid.Column="1">
                         <metro:MetroTile HorizontalAlignment="Left" Margin="21,18,0,0" x:Name="viewInfoTile" VerticalAlignment="Top" Height="96" Width="123" IsNumbersEnabled="False" Header="View Info" Background="Blue" Click="viewInfoTile_Click"/>
-                        <metro:MetroTile HorizontalAlignment="Left" Margin="21,139,0,0" x:Name="searchTile" VerticalAlignment="Top" Height="95" Width="123" IsNumbersEnabled="False" Header="Search" Background="Red"/>
+                        <TextBox Height="23" HorizontalAlignment="Left" Margin="31,167,0,0" Name="textBox1" VerticalAlignment="Top" Width="104" />
+                        <metro:MetroTile HorizontalAlignment="Left" Margin="21,139,0,0" x:Name="searchTile" VerticalAlignment="Top" Height="95" Width="123" IsNumbersEnabled="False" Header="Search" Background="Red" Click="searchTile_Click"/>
                         <metro:MetroTile Height="95" HorizontalAlignment="Left" Margin="21,266,0,0" x:Name="refreshTile" VerticalAlignment="Top" Width="123" IsNumbersEnabled="False" Header="Refresh" Background="Orange"/>
+                       
                     </Grid>
                 </Grid>
             </metro:MetroTabItem>
@@ -52,6 +54,22 @@
                                 <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="400"/>
                                 <GridViewColumn Header="Manga" DisplayMemberBinding="{Binding Path=ParentManga.MangaName}" Width="200"/>
                                 <GridViewColumn Header="Release Date" DisplayMemberBinding="{Binding ReleaseDate}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </metro:MetroTabItem>
+            <metro:MetroTabItem Header="Downloads">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <ListView Grid.Column="0" Name="DlQueueList" FontSize="14">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" Width="400" DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Header="Status" Width="200"  DisplayMemberBinding="{Binding Status}"/>
+                                <GridViewColumn Header="Queue Date" Width="224" DisplayMemberBinding="{Binding Date}" />
                             </GridView>
                         </ListView.View>
                     </ListView>

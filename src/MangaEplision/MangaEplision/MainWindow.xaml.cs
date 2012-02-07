@@ -15,6 +15,7 @@ using MangaEplision.Metro;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using MangaEplision.Base;
+using System.Windows.Threading;
 
 namespace MangaEplision
 {
@@ -23,12 +24,14 @@ namespace MangaEplision
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        internal  List<QueueItem> DlQueue;
         public MainWindow()
         {
             InitializeComponent();
             this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
             this.StateChanged += new EventHandler(MainWindow_StateChanged);
             this.SizeChanged += new SizeChangedEventHandler(MainWindow_SizeChanged);
+            DlQueue = new List<QueueItem>();
         }
 
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -109,6 +112,59 @@ namespace MangaEplision
                 mr.DataContext = CollectionListView.SelectedItem;
                 mr.Show();
             }
+        }
+
+        internal void AddToQueue(BookEntry bookEntry, MangaEplision.Base.Manga manga)
+        {
+            if (DlQueue != null)
+            {
+                DlQueue.Add(new QueueItem(bookEntry, manga));
+                DlQueueList.ItemsSource = DlQueue;
+                DlQueueList.Items.Refresh();
+            }
+        }
+
+        internal  void CallStartQueueProcess()
+        {
+            var queueRunner = System.Threading.Tasks.Task.Factory.StartNew(() => {
+                int i = 0;
+                while (DlQueue.Count > 0)
+                {
+                    QueueItem q = DlQueue[i];
+                    if (Global.GetBookExist(q.Manga, q.Book))
+                        return;
+                    else
+                    {
+                        q.Downloding = true;
+                        q.Status = QueueStatus.Downloading;
+                        Dispatcher.Invoke(new EmptyDelegate(() =>
+                                        {
+                                            DlQueueList.ItemsSource = DlQueue;
+                                            DlQueueList.Items.Refresh();
+                                        }));
+                        Global.DownloadMangaBook(q.Manga, q.Book, () =>
+                        {
+                            q.Downloding = false; q.Status = QueueStatus.Compleated; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
+                                        {
+                                            DlQueueList.ItemsSource = DlQueue;
+                                            DlQueueList.Items.Refresh();
+                                        }));
+                        });
+                        while (q.Downloding)
+                            System.Threading.Thread.Sleep(30000);
+                    }
+                }
+                });
+        }
+
+        private void searchTile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void searchTile_MouseEnter(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

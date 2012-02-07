@@ -46,15 +46,15 @@ namespace MangaEplision.Sources.MangaReader
 
 
             int maxpages = 0;
-            Match pgcount = Regex.Match(firstpagehtml, "<div id=\"selectpage\">.+?</div>", RegexOptions.Singleline);
+            Match pgcount = Regex.Match(firstpagehtml, "<div id=\"selectpage\">.+?</div>", RegexOptions.Singleline | RegexOptions.Compiled);
             string pgcountstr = Regex.Replace(pgcount.Value, "<option.+?>.+?</option>", "");
             pgcountstr = Regex.Replace(pgcountstr, "<.+?>", "");
             pgcountstr = pgcountstr.Replace("of", "").Replace(" ", "").Replace("\n", "");
             maxpages = int.Parse(pgcountstr);
 
 
-            Match firstimg = Regex.Match(firstpagehtml, "<img id=\"img\".+?>", RegexOptions.Singleline);
-            string firstimgurl = Regex.Match(firstimg.Value, "src=\".+?\"", RegexOptions.Singleline).Value;
+            Match firstimg = Regex.Match(firstpagehtml, "<img id=\"img\".+?>", RegexOptions.Singleline | RegexOptions.Compiled);
+            string firstimgurl = Regex.Match(firstimg.Value, "src=\".+?\"", RegexOptions.Singleline | RegexOptions.Compiled).Value;
             firstimgurl = Regex.Replace(firstimgurl, "(src=\"|\")", "");
             System.Windows.Application.Current.Dispatcher.Invoke(new EmptyDelegate(delegate()
             {
@@ -142,7 +142,7 @@ namespace MangaEplision.Sources.MangaReader
                      * */
                 }), null);
 
-                System.Threading.Thread.Sleep(100); //Prevent simulating a DDOS.
+                System.Threading.Thread.Sleep(50); //Decreased from 100 to 50, better download time,   // //Prevent simulating a DDOS.
             }
 
             return b;
