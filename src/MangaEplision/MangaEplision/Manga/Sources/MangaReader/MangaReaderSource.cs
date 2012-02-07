@@ -229,8 +229,8 @@ namespace MangaEplision.Sources.MangaReader
                 MatchCollection split = Regex.Matches(chp.Value, "<td>.+?</td>", RegexOptions.Singleline | RegexOptions.Compiled);
                 BookEntry be = new BookEntry(m);
                 string datestr = split[1].Value.Replace("</td>", "").Replace("<td>", "");
-                be.ReleaseDate = DateTime.Parse(datestr);
-
+                DateTime tmp;
+                be.ReleaseDate = (DateTime.TryParse(datestr, out tmp)) ? DateTime.Parse(datestr) : DateTime.Now;
                 string chpurl = "";
                 chpurl = Regex.Match(split[0].Value, "href=\".+?\"", RegexOptions.Singleline | RegexOptions.Compiled).Value;
                 chpurl = Regex.Replace(chpurl, "(href=\"|\")", "");

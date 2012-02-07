@@ -322,13 +322,13 @@ namespace MangaEplision
         {
             return str.Replace(":", "-");
         }
-        public static void DownloadMangaBook(Manga manga, BookEntry book, Action act = null)
+        public static void DownloadMangaBook(Manga manga, BookEntry book, Action act = null, Action<int,int> Pcount = null)
         {
             Task.Factory.StartNew(() =>
                 {
                     try
                     {
-                        Book bk = Global.MangaSource.GetBook(manga, book);
+                        Book bk = Global.MangaSource.GetBook(manga, book, Pcount);
                         bk.PageLocalUrls = new System.Collections.ObjectModel.Collection<string>();
 
                         BinaryFormatter bf = new BinaryFormatter();
