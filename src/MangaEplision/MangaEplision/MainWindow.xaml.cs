@@ -156,8 +156,6 @@ namespace MangaEplision
                                 DlQueueList.ItemsSource = DlQueue;
                                 DlQueueList.Items.Refresh();
                                 QueueStatuslbl.Content = string.Format("Done! {0} Items Left in Queue", DlQueue.Count);
-                                Global.LoadCollection();
-                                this.CatalogListBox.Items.Refresh();
                                 CurrProg.Value = 0;
                                 Count.Content = string.Format("{0}%", 0);
                             }));

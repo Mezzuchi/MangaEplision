@@ -101,7 +101,7 @@ namespace MangaEplision.Sources.MangaReader
                 url_1 = url + "/";
                 url_2 = "";
             }
-            for (int i = 2; i < maxpages; i++)
+            for (int i = 2; i < maxpages + 1; i++)
             {
                 if (progressHandler != null)
                     progressHandler(i, maxpages);
