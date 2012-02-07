@@ -36,44 +36,20 @@ namespace MangaEplision
                 MessageBox.Show("Please select a book before pressing this button!");
             else
             {
-                BookEntry be = (BookEntry)BooksLsView.SelectedItem;
-
-                if (Global.GetBookExist((Manga)this.DataContext, be))
-                    MessageBox.Show("This book is already downloaded!");
+                if (BooksLsView.SelectedItems.Count > 1)
+                {
+                    for (int i = 0; i < BooksLsView.SelectedItems.Count; i++)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).AddToQueue((BookEntry)BooksLsView.SelectedItems[i], (MangaEplision.Base.Manga)this.DataContext);
+                    }
+                    ((MainWindow)Application.Current.MainWindow).CallStartQueueProcess();
+                }
                 else
                 {
-                    IndefiniteProgressDialog ipd = new IndefiniteProgressDialog();
-                    ipd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                    ipd.Topmost = true;
-                    Dispatcher.Invoke(new EmptyDelegate(() =>
-                        ipd.Show()));
-                    ((MainWindow)Application.Current.MainWindow).metroTabControl1.SelectedIndex = 1;
-                    Global.DownloadMangaBook(
-                                        (Manga)this.DataContext, be, () =>
-                                        {
-                                            Dispatcher.Invoke(new EmptyDelegate(() =>
-                                                {
-                                                    var collectionTab = ((MetroTabItem)((MainWindow)Application.Current.MainWindow).metroTabControl1.Items[1]);
-                                                    collectionTab.UpdateLayout();
-                                                    Global.LoadCollection();
-                                                    var ls = ((ListView)((Grid)collectionTab.Content).FindName("CollectionListView"));
-                                                    try
-                                                    {
-                                                        ls.GetBindingExpression(ListView.ItemsSourceProperty).UpdateTarget();
-                                                    }
-                                                    catch (Exception)
-                                                    {
-                                                        var source = ls.ItemsSource;
-                                                        ls.ItemsSource = null;
-                                                        ls.InvalidateMeasure();
-                                                        ls.ItemsSource = Global.BookCollection;
-                                                    }
-                                                    ipd.Close();
-                                                }
-                                                ));
-                                        });
-                    //
+                    ((MainWindow)Application.Current.MainWindow).AddToQueue((BookEntry)BooksLsView.SelectedItem, (MangaEplision.Base.Manga)this.DataContext);
+                    ((MainWindow)Application.Current.MainWindow).CallStartQueueProcess();
                 }
+                ((MainWindow)Application.Current.MainWindow).metroTabControl1.SelectedIndex = 3;
             }
         }
     }
