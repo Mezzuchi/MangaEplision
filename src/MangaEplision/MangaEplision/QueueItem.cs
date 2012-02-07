@@ -25,7 +25,7 @@ namespace MangaEplision
        }
 
 
-       public bool Downloding { get; set; }
+       public bool Downloading { get; set; }
     }
     enum QueueStatus
     {

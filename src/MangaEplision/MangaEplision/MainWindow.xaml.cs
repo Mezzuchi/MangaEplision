@@ -141,7 +141,7 @@ namespace MangaEplision
                         return;
                     else
                     {
-                        q.Downloding = true;
+                        q.Downloading = true;
                         q.Status = QueueStatus.Downloading;
                         Dispatcher.Invoke(new QueueUpDelegate((qi) =>
                                         {
@@ -151,7 +151,7 @@ namespace MangaEplision
                                         }),q);
                         Global.DownloadMangaBook(q.Manga, q.Book, () =>
                         {
-                            q.Downloding = false; q.Status = QueueStatus.Completed; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
+                            q.Downloading = false; q.Status = QueueStatus.Completed; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
                             {
                                 DlQueueList.ItemsSource = DlQueue;
                                 DlQueueList.Items.Refresh();
@@ -167,7 +167,7 @@ namespace MangaEplision
                                 Count.Content = string.Format("{0}%", precent);
                             }), curr, total);
                         });
-                        while (q.Downloding)
+                        while (q.Downloading)
                             System.Threading.Thread.Sleep(30000);
                     }
                 }
