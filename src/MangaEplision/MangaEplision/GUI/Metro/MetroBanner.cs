@@ -93,11 +93,11 @@ namespace MangaEplision.Metro
             
             slideshow.Elapsed += new ElapsedEventHandler(slideshow_Elapsed);
             slideshow.Interval = 7000; //7 seconds
-            slideshow.Start();
+            //slideshow.Start();
 
             slideshow_prog.Elapsed += new ElapsedEventHandler(slideshow_prog_Elapsed);
             slideshow_prog.Interval = 1000;
-            slideshow_prog.Start();
+            //slideshow_prog.Start();
 
             progbar.Maximum = 7;
             progbar.Value = 7;
@@ -138,6 +138,9 @@ namespace MangaEplision.Metro
         {
             if (Slides.Count > (CurrentIndex + 1))
             {
+                if (Slide == null)
+                    Slide = Slides[CurrentIndex];
+
                 Slide.FadeOut();
 
                 CurrentIndex += 1;
@@ -203,5 +206,16 @@ namespace MangaEplision.Metro
         public static readonly DependencyProperty SlideProperty = DependencyProperty.Register(
           "Slide", typeof(MetroBannerSlide), typeof(MetroBanner),
           new PropertyMetadata(null));
+
+        public void Start()
+        {
+            slideshow.Start();
+            slideshow_prog.Start();
+        }
+        public void Stop()
+        {
+            slideshow_prog.Stop();
+            slideshow.Stop();
+        }
     }
 }
