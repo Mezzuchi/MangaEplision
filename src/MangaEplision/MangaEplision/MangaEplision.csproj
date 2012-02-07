@@ -103,6 +103,7 @@
     <Compile Include="GUI\Metro\MetroWindow.cs" />
     <Compile Include="GUI\Metro\UriToBitmapImageConverter.cs" />
     <Compile Include="Manga\Sources\MangaReader\MangaReaderSource.cs" />
+    <Compile Include="NetworkUtils.cs" />
     <Compile Include="QueueItem.cs" />
     <Page Include="MangaInfoControl.xaml">
       <SubType>Designer</SubType>
@@ -182,7 +183,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Build" BuildVersion_BuildVersioningStyle="None.None.Increment.None" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.None" BuildVersion_BuildAction="Build" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

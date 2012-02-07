@@ -26,7 +26,15 @@
                         <ColumnDefinition Width="152" />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <metro:MetroGroupBox Margin="6" x:Name="metroGroupBox1" Header="Catalog" NotificationsCount="0" Foreground="Black">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <metro:MetroBanner Grid.Row="0" Height="300" x:Name="metroBanner" Foreground="Black">
+                                
+                            </metro:MetroBanner>
+                            <metro:MetroGroupBox Margin="6" x:Name="metroGroupBox1" Header="Catalog" NotificationsCount="0" Foreground="Black" Grid.Row="1">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="300*"/>
@@ -40,6 +48,8 @@
                             </ListBox>
                             </Grid>
                         </metro:MetroGroupBox>
+                        </Grid>
+                        
                     </Grid>
                     <Grid Grid.Column="1">
                         <metro:MetroTile HorizontalAlignment="Left" Margin="21,18,0,0" x:Name="viewInfoTile" VerticalAlignment="Top" Height="96" Width="123" IsNumbersEnabled="False" Header="View Info" Background="Blue" Click="viewInfoTile_Click"/>

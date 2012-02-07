@@ -24,7 +24,7 @@ namespace MangaEplision
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        internal  List<QueueItem> DlQueue;
+        internal List<QueueItem> DlQueue;
         public MainWindow()
         {
             InitializeComponent();
@@ -36,7 +36,10 @@ namespace MangaEplision
 
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2;
+            if (metroBanner.Visibility == System.Windows.Visibility.Collapsed)
+                CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2;
+            else if (metroBanner.Visibility == System.Windows.Visibility.Visible) ;
+            CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2 - metroBanner.ActualHeight;
         }
 
 
@@ -48,6 +51,7 @@ namespace MangaEplision
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+
             Task.Factory.StartNew(() =>
                 {
                     System.Threading.Thread.Sleep(1000);
@@ -63,9 +67,37 @@ namespace MangaEplision
                                 metroGroupBox1.NotificationsCount = Global.Mangas.Length;
                             }
                         }));
-                });
+                }).ContinueWith((task) =>
+                    {
+                        Dispatcher.Invoke(
+                            new EmptyDelegate(() =>
+                                {
+                                    try
+                                    {
+                                        if (NetworkUtils.IsConnectedToInternet())
+                                        {
+                                            metroBanner.Visibility = System.Windows.Visibility.Visible;
+                                            foreach (BookEntry be in Global.MangaSource.GetNewReleasesOfToday())
+                                            {
+                                                var slide = new MetroBannerSlide();
+                                                slide.Header = be.Name + " / " + be.ParentManga.MangaName;
+                                                slide.Image = new Uri(be.ParentManga.BookImageUrl);
+                                                metroBanner.Slides.Add(slide);
+                                            }
+                                            metroBanner.Start();
+                                        }
+                                        else
+                                            metroBanner.Visibility = System.Windows.Visibility.Collapsed;
+                                    }
+                                    catch (Exception)
+                                    {
+                                    }
+                                }));
+                    });
             Application.Current.Exit += new ExitEventHandler(Global.Current_Exit);
             Application.Current.DispatcherUnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(Global.Current_DispatcherUnhandledException);
+
+
         }
         private delegate void EmptyDelegate();
         private delegate void UpdateDelegate(int Current, int Total);
@@ -78,30 +110,37 @@ namespace MangaEplision
             }
             else
             {
-                Manga info = null;
-                string name = CatalogListBox.SelectedItem.ToString();
-                var task = Task.Factory.StartNew(() =>
-                    {
-                        info = Global.GetMangaInfo(name);
-                    }).ContinueWith((tsk) =>
+                if (NetworkUtils.IsConnectedToInternet())
+                {
+                    Manga info = null;
+                    string name = CatalogListBox.SelectedItem.ToString();
+                    var task = Task.Factory.StartNew(() =>
                         {
-                            if (tsk.Exception == null)
-                                Dispatcher.Invoke(
-                                    new EmptyDelegate(
-                                        () =>
-                                        {
-                                            MetroTabItem mti = new MetroTabItem();
-                                            mti.IsClosable = true;
-                                            mti.Header = info.MangaName;
-                                            mti.Content = new MangaInfoControl(info);
+                            info = Global.GetMangaInfo(name);
+                        }).ContinueWith((tsk) =>
+                            {
+                                if (tsk.Exception == null)
+                                    Dispatcher.Invoke(
+                                        new EmptyDelegate(
+                                            () =>
+                                            {
+                                                MetroTabItem mti = new MetroTabItem();
+                                                mti.IsClosable = true;
+                                                mti.Header = info.MangaName;
+                                                mti.Content = new MangaInfoControl(info);
 
-                                            metroTabControl1.Items.Add(mti);
+                                                metroTabControl1.Items.Add(mti);
 
-                                            metroTabControl1.SelectedItem = mti;
-                                        }));
-                            else
-                                MessageBox.Show("There was an error grabbing information on that manga!" + Environment.NewLine + "Geeky error details: " + Environment.NewLine + Environment.NewLine + tsk.Exception.ToString() + Environment.NewLine + Environment.NewLine + "NOTE: You can press CTRL + C to copy the contents of this message!");
-                        });
+                                                metroTabControl1.SelectedItem = mti;
+                                            }));
+                                else
+                                    MessageBox.Show("There was an error grabbing information on that manga!" + Environment.NewLine + "Geeky error details: " + Environment.NewLine + Environment.NewLine + tsk.Exception.ToString() + Environment.NewLine + Environment.NewLine + "NOTE: You can press CTRL + C to copy the contents of this message!");
+                            });
+                }
+                else
+                {
+                    MessageBox.Show("You are not connected to the internet! Connect and try again!");
+                }
             }
         }
 
@@ -125,14 +164,15 @@ namespace MangaEplision
                     DlQueue.Add(qi);
                     DlQueueList.ItemsSource = DlQueue;
                     DlQueueList.Items.Refresh();
-                    QueueStatuslbl.Content = string.Format("There Are currently {0} Items in your Queue",DlQueue.Count);
+                    QueueStatuslbl.Content = string.Format("There Are currently {0} Items in your Queue", DlQueue.Count);
                 }
             }
         }
 
-        internal  void CallStartQueueProcess()
+        internal void CallStartQueueProcess()
         {
-            var queueRunner = System.Threading.Tasks.Task.Factory.StartNew(() => {
+            var queueRunner = System.Threading.Tasks.Task.Factory.StartNew(() =>
+            {
                 int i = 0;
                 while (DlQueue.Count > 0)
                 {
@@ -148,7 +188,7 @@ namespace MangaEplision
                                             QueueStatuslbl.Content = string.Format("Downloading {1}", DlQueue.Count, q.Name);
                                             DlQueueList.ItemsSource = DlQueue;
                                             DlQueueList.Items.Refresh();
-                                        }),q);
+                                        }), q);
                         Global.DownloadMangaBook(q.Manga, q.Book, () =>
                         {
                             q.Downloading = false; q.Status = QueueStatus.Completed; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
@@ -163,7 +203,7 @@ namespace MangaEplision
                         {
                             Dispatcher.Invoke(new UpdateDelegate((cur, tot) =>
                             {
-                                int precent = ((((cur < tot) ? cur+1 : cur) * 100) / tot);
+                                int precent = ((((cur < tot) ? cur + 1 : cur) * 100) / tot);
                                 CurrProg.Value = precent;
                                 Count.Content = string.Format("{0}%", precent);
                             }), curr, total);
@@ -172,7 +212,7 @@ namespace MangaEplision
                             System.Threading.Thread.Sleep(30000);
                     }
                 }
-                });
+            });
         }
 
         private void searchTile_Click(object sender, RoutedEventArgs e)

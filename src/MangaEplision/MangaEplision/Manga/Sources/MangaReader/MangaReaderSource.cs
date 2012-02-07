@@ -192,11 +192,9 @@ namespace MangaEplision.Sources.MangaReader
             return dict;
         }
 
-        public Manga GetMangaInfo(string name)
+        public Manga GetMangaInfoByUrl(string url)
         {
             Manga m = new Manga();
-            string url = mangas[name];
-
             HttpWebRequest hwr = (HttpWebRequest)HttpWebRequest.Create(url);
             string html = "";
             using (var sr = new StreamReader(hwr.GetResponse().GetResponseStream()))
@@ -219,6 +217,8 @@ namespace MangaEplision.Sources.MangaReader
             m.IsBookImageCached = false;
             m.BookImageUrl = img;
 
+            var name = Regex.Match(html, "<h2 class=\"aname\">.+?</h2>", RegexOptions.Singleline | RegexOptions.Compiled).Value;
+            name = Regex.Replace(name,"<.+?>","");
             m.MangaName = name;
 
 
@@ -239,7 +239,7 @@ namespace MangaEplision.Sources.MangaReader
 
                 string nm = Regex.Replace(split[0].Value.Replace("</td>", "").Replace("<td>", ""), "<.+?>", "");
                 //nm = nm.Substring(3);
-                be.Name = nm.Replace("\n","");
+                be.Name = nm.Replace("\n", "");
                 be.ID = m.Books.Count + 1;
                 m.Books.Add(be);
             }
@@ -257,6 +257,61 @@ namespace MangaEplision.Sources.MangaReader
             return m;
         }
 
+        public Manga GetMangaInfo(string name)
+        {
+            string url = mangas[name];
+            return GetMangaInfoByUrl(url);
+        }
+
         #endregion
+
+
+        public BookEntry[] GetNewReleasesOfToday()
+        {
+            var html = GetHtml("http://mangareader.net/");
+
+            var manga_updates_area = Regex.Match(html, "<div id=\"latestchapters\">.+?<h3>Yesterday's Manga</h3>", RegexOptions.Singleline | RegexOptions.Compiled);
+            var matchedmangas = Regex.Matches(manga_updates_area.Value, "<td>.+?</td>", RegexOptions.Singleline | RegexOptions.Compiled);
+
+            List<BookEntry> entries = new List<BookEntry>();
+
+            foreach (Match match in matchedmangas)
+            {
+                BookEntry be = null;
+
+                var manganame = Regex.Match(match.Value,
+                    "<a class=\"chapter\".+?>.+?</a>",
+                    RegexOptions.Singleline | RegexOptions.Compiled);
+                manganame = Regex.Matches(manganame.Value, "\".+?\"", RegexOptions.Compiled | RegexOptions.Singleline)[1];
+
+                var manganamestr = manganame.Value; 
+                manganamestr = (manganamestr.StartsWith("\"") ? manganamestr.Substring(1) : manganamestr);
+                manganamestr = (manganamestr.EndsWith("\"") ? manganamestr.Remove(manganamestr.Length -1) : manganamestr);
+
+                var mangaurl = "http://mangareader.net" + manganamestr;
+                be = new BookEntry(GetMangaInfoByUrl(mangaurl));
+
+
+
+                var chapter = Regex.Match(match.Value,
+                    "<a class=\"chaptersrec\".+?>.+?</a>",
+                    RegexOptions.Singleline | RegexOptions.Compiled);
+
+                var chpname = Regex.Replace(
+                    Regex.Match(chapter.Value, ">.+?<", RegexOptions.Singleline | RegexOptions.Compiled).Value,
+                    "(>|<)",
+                "");
+                be.Name = chpname;
+
+                var chpurl = Regex.Matches(match.Value, "\".+?\"", RegexOptions.Singleline | RegexOptions.Compiled)[1].Value;
+                chpurl = (chpurl.StartsWith("\"") ? chpurl.Substring(1) : chpurl);
+                chpurl = (chpurl.EndsWith("\"") ? chpurl.Remove(chpurl.Length - 1) : chpurl);
+                be.Url = "http://mangareader.net" + chpurl;
+
+                entries.Add(be);
+            }
+
+            return entries.ToArray();
+        }
     }
 }

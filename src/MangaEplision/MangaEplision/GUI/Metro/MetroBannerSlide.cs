@@ -125,5 +125,8 @@ namespace MangaEplision.Metro
             }*/
             //this.Opacity = 0.0;
         }
+
+        public Image ImageControl { get { 
+            return (Image)this.Template.FindName("PART_img",null); } }
     }
 }
