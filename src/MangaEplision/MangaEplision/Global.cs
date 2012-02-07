@@ -85,7 +85,7 @@ namespace MangaEplision
                             {
                                 prog.Close();
                             }));
-                        LoadCatalog(false);
+                        LoadCatalog(true);
                     }).Wait();
                 }
                 else
@@ -97,7 +97,7 @@ namespace MangaEplision
             }
             else
             {
-                LoadCatalog();
+                LoadCatalog(true);
             }
         }
 
