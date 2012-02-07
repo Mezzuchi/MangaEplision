@@ -82,7 +82,7 @@ namespace MangaEplision
                 string name = CatalogListBox.SelectedItem.ToString();
                 var task = Task.Factory.StartNew(() =>
                     {
-                        info = Global.MangaSource.GetMangaInfo(name);
+                        info = Global.GetMangaInfo(name);
                     }).ContinueWith((tsk) =>
                         {
                             if (tsk.Exception == null)
@@ -156,13 +156,16 @@ namespace MangaEplision
                                 DlQueueList.ItemsSource = DlQueue;
                                 DlQueueList.Items.Refresh();
                                 QueueStatuslbl.Content = string.Format("Done! {0} Items Left in Queue", DlQueue.Count);
-                                
+                                Global.LoadCollection();
+                                this.CatalogListBox.Items.Refresh();
+                                CurrProg.Value = 0;
+                                Count.Content = string.Format("{0}%", 0);
                             }));
-                        }, (curr, total) => 
+                        }, (curr, total) =>
                         {
                             Dispatcher.Invoke(new UpdateDelegate((cur, tot) =>
                             {
-                                int precent = ((cur * 100) / tot);
+                                int precent = ((((cur < tot) ? cur+1 : cur) * 100) / tot);
                                 CurrProg.Value = precent;
                                 Count.Content = string.Format("{0}%", precent);
                             }), curr, total);

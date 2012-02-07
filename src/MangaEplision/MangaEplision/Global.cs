@@ -22,6 +22,7 @@ namespace MangaEplision
         public static string DataDir = null;
         public static string CatalogFilename = null;
         public static string CollectionDir = null;
+        public static string CacheDir = null;
         public static void Initialize()
         {
 
@@ -31,10 +32,16 @@ namespace MangaEplision
                 Directory.CreateDirectory(DataDir);
 
             CollectionDir = DataDir + "\\Collection\\";
-
+            CacheDir = DataDir + "\\Cache\\";
             if (!Directory.Exists(CollectionDir))
                 Directory.CreateDirectory(CollectionDir);
+            if (!Directory.Exists(CacheDir))
+                Directory.CreateDirectory(CacheDir);
+            CachedManga = new List<Manga>();
 
+            
+
+            LoadCachedManga();
             fswatch = new FileSystemWatcher(CollectionDir);
 
             fswatch.EnableRaisingEvents = true;
@@ -98,6 +105,45 @@ namespace MangaEplision
             else
             {
                 LoadCatalog(true);
+            }
+        }
+        public static Manga GetMangaInfo(string name)
+        {
+            var first = CachedManga.Find((m) => m.MangaName.ToLower() == name.ToLower());
+            if (first != null)
+                return first;
+            else
+            {
+                var book = MangaSource.GetMangaInfo(name);
+                CachedManga.Add(book); //For future fetches during this runtime.
+
+                using (var fs = new FileStream(CacheDir + book.MangaName.CommonReplace() + ".bin", FileMode.Create))
+                {
+                    var bf = new BinaryFormatter();
+                    bf.Serialize(fs, book);
+                }
+
+                return book;
+            }
+
+        }
+
+        public static List<Manga> CachedManga { get; private set; }
+
+        public static void LoadCachedManga()
+        {
+            foreach (var file in Directory.GetFiles(CacheDir, "*.bin"))
+            {
+                try
+                {
+                    using (var fs = new FileStream(file, FileMode.Open))
+                    {
+                        var bf = new BinaryFormatter();
+                        var book = (Manga)bf.Deserialize(fs);
+                        CachedManga.Add(book);
+                    }
+                }
+                catch (Exception) { }
             }
         }
 
@@ -190,7 +236,7 @@ namespace MangaEplision
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Unable to load book from collection!" + Environment.NewLine + "File: " + file);
+                    MessageBox.Show("Unable to load book from collection!" + Environment.NewLine + "File: " + file + Environment.NewLine + "This book may be corrupted, Please delete the book and retry the download");
                 }
                 finally
                 {
