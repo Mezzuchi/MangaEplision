@@ -76,6 +76,18 @@ namespace MangaEplision
 
                                 Global.CleanupQueueDir();
                             }
+                            if (NetworkUtils.IsConnectedToInternet())
+                            {
+                                foreach (BookEntry be in Global.MangaSource.GetNewReleasesOfToday())
+                                {
+                                    var slide = new MetroBannerSlide();
+                                    slide.Header = be.Name + " / " + be.ParentManga.MangaName;
+                                    slide.Image = new BitmapImage(new Uri(be.ParentManga.BookImageUrl));
+                                    metroBanner.Slides.Add(slide);
+                                }
+                                metroBanner.Slide = metroBanner.Slides[0];
+                                metroBanner.Start();
+                            }
                         }));
                 }).ContinueWith((task) =>
                     {
@@ -85,17 +97,7 @@ namespace MangaEplision
                                     try
                                     {
                                         if (NetworkUtils.IsConnectedToInternet())
-                                        {
                                             metroBanner.Visibility = System.Windows.Visibility.Visible;
-                                            foreach (BookEntry be in Global.MangaSource.GetNewReleasesOfToday())
-                                            {
-                                                var slide = new MetroBannerSlide();
-                                                slide.Header = be.Name + " / " + be.ParentManga.MangaName;
-                                                slide.Image = new Uri(be.ParentManga.BookImageUrl);
-                                                metroBanner.Slides.Add(slide);
-                                            }
-                                            metroBanner.Start();
-                                        }
                                         else
                                             metroBanner.Visibility = System.Windows.Visibility.Collapsed;
                                     }

@@ -364,8 +364,8 @@
                                 </Grid.RowDefinitions>
                                 <local:MetroProgressBar x:Name="PART_SlideProgressBar" HorizontalAlignment="Stretch" Panel.ZIndex="100" VerticalAlignment="Top" Height="3" Grid.Row="0"/>
                                 <DockPanel Width="{Binding Grid.ActualWidth}" Grid.Row="1">
-
-                                    <local:MetroCircleButton x:Name="PART_NextButton" DockPanel.Dock="Right" Width="30">
+                                    <Label Content="{Binding Path=Slide.Header}" HorizontalAlignment="Left" VerticalAlignment="Stretch"></Label>
+                                        <local:MetroCircleButton x:Name="PART_NextButton" DockPanel.Dock="Right" Width="30">
                                         <local:MetroCircleButton.Content>
                                             <Polygon Points="10,3 25,12 10,24" Stroke="White" Fill="White">
                                             </Polygon>
