@@ -367,7 +367,7 @@
                                     <!--<Label Content="{Binding Path=Slide.Header}" HorizontalAlignment="Left" VerticalAlignment="Stretch" FontSize="40"></Label> TODO, fix later-->
                                     <local:MetroCircleButton x:Name="PART_NextButton" DockPanel.Dock="Right" Width="30">
                                         <local:MetroCircleButton.Content>
-                                            <Polygon Points="10,3 25,12 10,24" Stroke="White" Fill="White">
+                                            <Polygon Points="7,4 23,10, 7,18" Stroke="White" Fill="White">
                                             </Polygon>
                                         </local:MetroCircleButton.Content>
                                         <local:MetroCircleButton.RenderTransform>
