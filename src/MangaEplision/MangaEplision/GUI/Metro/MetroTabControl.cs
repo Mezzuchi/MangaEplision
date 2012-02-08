@@ -43,19 +43,12 @@ namespace MangaEplision.Metro
 
         void MetroTabItem_Unloaded(object sender, RoutedEventArgs e)
         {
-            CloseLabel.MouseDoubleClick -= CloseLabel_MouseDoubleClick;
+            CloseLabel.MouseLeftButtonUp -= CloseLabel_MouseLeftButtonUp;
+            //CloseLabel.MouseDoubleClick -= CloseLabel_MouseDoubleClick;
             this.Loaded -= MetroTabItem_Loaded;
         }
 
-        private Label CloseLabel = null;
-
-        void MetroTabItem_Loaded(object sender, RoutedEventArgs e)
-        {
-            CloseLabel = (Label)this.Template.FindName("PART_CloseLabel", this);
-            CloseLabel.MouseDoubleClick += CloseLabel_MouseDoubleClick;
-        }
-
-        void CloseLabel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        void CloseLabel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var earg = new MetroTabItemCloseEventArgs();
             if (MetroTabItemClosing != null)
@@ -73,6 +66,20 @@ namespace MangaEplision.Metro
                 MetroTabControl mtc = (MetroTabControl)base.Parent;
                 mtc.Items.Remove(this);
             }
+        }
+
+        private Label CloseLabel = null;
+
+        void MetroTabItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            CloseLabel = (Label)this.Template.FindName("PART_CloseLabel", this);
+            //CloseLabel.MouseDoubleClick += CloseLabel_MouseDoubleClick;
+            CloseLabel.MouseLeftButtonUp += CloseLabel_MouseLeftButtonUp;
+        }
+
+        void CloseLabel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            
         }
 
         ~MetroTabItem()
