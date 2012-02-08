@@ -209,13 +209,25 @@ namespace MangaEplision.Metro
 
         public void Start()
         {
-            slideshow.Start();
-            slideshow_prog.Start();
+            try
+            {
+                slideshow.Start();
+                slideshow_prog.Start();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
         }
         public void Stop()
         {
-            slideshow_prog.Stop();
-            slideshow.Stop();
+            try
+            {
+                slideshow_prog.Stop();
+                slideshow.Stop();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
         }
     }
 }
