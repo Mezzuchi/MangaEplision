@@ -222,7 +222,7 @@ namespace MangaEplision
                     DlQueue.Add(qi);
                     DlQueueList.ItemsSource = DlQueue;
                     DlQueueList.Items.Refresh();
-                    QueueStatuslbl.Content = string.Format("There are currently {0} items in your Queue.", DlQueue.Count);
+                    QueueStatuslbl.Content = string.Format("There are currently {0} items in your queue.", DlQueue.Count);
                 }
             }
         }
@@ -247,16 +247,20 @@ namespace MangaEplision
                                             DlQueueList.ItemsSource = DlQueue;
                                             DlQueueList.Items.Refresh();
                                         }), q);
-                        Global.DownloadMangaBook(q.Manga, q.Book, () =>
+
+                        Global.DownloadMangaBook(q.Manga, q.Book, (dlBook) =>
                         {
                             q.Downloading = false; q.Status = QueueStatus.Completed; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
                             {
                                 DlQueueList.ItemsSource = DlQueue;
                                 DlQueueList.Items.Refresh();
-                                QueueStatuslbl.Content = string.Format("Done! {0} items left in Queue.", DlQueue.Count);
-                                Global.DisplayNotification(string.Format("{0} is done downloading", q.Name), "Download Complete");
+                                QueueStatuslbl.Content = string.Format("Done! {0} items left in queue.", DlQueue.Count);
+                                Global.DisplayNotification(string.Format("{0} has downloaded.", q.Name), "Download Complete");
                                 CurrProg.Value = 0;
                                 Count.Content = string.Format("{0}%", 0);
+
+                                Global.BookCollection.Add(dlBook); //forcefully add the book after the download is finished.
+                                
 
                                 if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
                                 {
