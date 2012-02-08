@@ -24,6 +24,7 @@ namespace MangaEplision
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        internal bool QueueRunning = false;
         internal List<QueueItem> DlQueue;
         public MainWindow()
         {
@@ -225,6 +226,7 @@ namespace MangaEplision
         {
             var queueRunner = System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
+                QueueRunning = true;
                 int i = 0;
                 while (DlQueue.Count > 0)
                 {
@@ -279,6 +281,8 @@ namespace MangaEplision
                             System.Threading.Thread.Sleep(30000);
                     }
                 }
+                QueueRunning = false;
+                Global.DisplayNotification("Your Queue Has Been Emptied!", "Empty Queue!");
             });
         }
 
