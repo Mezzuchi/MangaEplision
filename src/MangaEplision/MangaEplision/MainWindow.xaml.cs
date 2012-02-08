@@ -37,9 +37,9 @@ namespace MangaEplision
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (metroBanner.Visibility == System.Windows.Visibility.Collapsed)
-                CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2;
+                CatalogListBox.Height = (this.Height - ((this.Height - metroTabControl1.ActualHeight) - LatestReleaseGB.FontSize)) - DashboardTab.ActualHeight * 3;
             else if (metroBanner.Visibility == System.Windows.Visibility.Visible) ;
-            CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2 - metroBanner.ActualHeight;
+            CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2 - metroBanner.ActualHeight - LatestReleaseGB.FontSize;
         }
 
 
@@ -72,21 +72,7 @@ namespace MangaEplision
                                 CatalogListBox.ItemsSource = Global.Mangas;
                                 metroGroupBox1.NotificationsCount = Global.Mangas.Length;
                             }
-                            if (NetworkUtils.IsConnectedToInternet())
-                            {
-                                foreach (BookEntry be in Global.MangaSource.GetNewReleasesOfToday())
-                                {
-                                    var slide = new MetroBannerSlide();
-                                    slide.Header = be.Name + " / " + be.ParentManga.MangaName;
-                                    slide.Image = new BitmapImage(new Uri(be.ParentManga.BookImageUrl));
-                                    slide.FontSize = 25;
-                                    slide.Foreground = Brushes.Red;
-                                    slide.FontStyle = FontStyles.Oblique;
-                                    metroBanner.Slides.Add(slide);
-                                }
-                                metroBanner.Slide = metroBanner.Slides[0];
-                                metroBanner.Start();
-                            }
+
                     #endregion
                         }));
                 }).ContinueWith((task) =>
@@ -104,11 +90,39 @@ namespace MangaEplision
                                     if (DlQueue.Count > 0)
                                         CallStartQueueProcess();
                                 }));
-
-
                                 Global.CleanupQueueDir();
                             }
                         });
+
+                        Task.Factory.StartNew(() =>
+                        {
+                            if (NetworkUtils.IsConnectedToInternet())
+                            {
+                                foreach (BookEntry be in Global.MangaSource.GetNewReleasesOfToday())
+                                {
+                                    Dispatcher.Invoke(new EmptyDelegate(
+                                        () =>
+                                        {
+                                            var slide = new MetroBannerSlide();
+                                            slide.Header = be.Name + " / " + be.ParentManga.MangaName;
+                                            slide.Image = new BitmapImage(new Uri(be.ParentManga.BookImageUrl));
+                                            slide.FontSize = 25;
+                                            slide.Foreground = Brushes.Red;
+                                            slide.FontStyle = FontStyles.Oblique;
+                                            metroBanner.Slides.Add(slide);
+                                        }));
+                                }
+
+                                Dispatcher.Invoke(new EmptyDelegate(() =>
+                                    {
+                                        metroBanner.Slide = metroBanner.Slides[0];
+                                        metroBanner.Start();
+
+                                        LatestReleaseGB.NotificationsCount = metroBanner.Slides.Count;
+                                    }));
+                            }
+                        });
+
                         Dispatcher.Invoke(
                             new EmptyDelegate(() =>
                                 {

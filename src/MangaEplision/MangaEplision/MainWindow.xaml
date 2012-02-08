@@ -31,32 +31,35 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <metro:MetroBanner Grid.Row="0" Height="300" x:Name="metroBanner" Foreground="Black">
-                                
-                            </metro:MetroBanner>
+                            <metro:MetroGroupBox Grid.Row="0" Header="Latest Release" x:Name="LatestReleaseGB" Foreground="Black">
+                                <metro:MetroBanner Height="350" x:Name="metroBanner" Foreground="Black">
+
+                                </metro:MetroBanner>
+                            </metro:MetroGroupBox>
+
                             <metro:MetroGroupBox Margin="6" x:Name="metroGroupBox1" Header="Catalog" NotificationsCount="0" Foreground="Black" Grid.Row="1">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="300*"/>
-                                </Grid.RowDefinitions>
-                            <ListBox Background="Transparent" Name="CatalogListBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <ContentPresenter Content="{Binding}"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            </Grid>
-                        </metro:MetroGroupBox>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="300*"/>
+                                    </Grid.RowDefinitions>
+                                    <ListBox Background="Transparent" Name="CatalogListBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <ContentPresenter Content="{Binding}"/>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </metro:MetroGroupBox>
                         </Grid>
-                        
+
                     </Grid>
                     <Grid Grid.Column="1">
                         <metro:MetroTile HorizontalAlignment="Left" Margin="21,18,0,0" x:Name="viewInfoTile" VerticalAlignment="Top" Height="96" Width="123" IsNumbersEnabled="False" Header="View Info" Background="Blue" Click="viewInfoTile_Click"/>
                         <TextBox Height="23" HorizontalAlignment="Left" Margin="31,167,0,0" Name="textBox1" VerticalAlignment="Top" Width="104" />
                         <metro:MetroTile HorizontalAlignment="Left" Margin="21,139,0,0" x:Name="searchTile" VerticalAlignment="Top" Height="95" Width="123" IsNumbersEnabled="False" Header="Search" Background="Red" Click="searchTile_Click"/>
                         <metro:MetroTile Height="95" HorizontalAlignment="Left" Margin="21,266,0,0" x:Name="refreshTile" VerticalAlignment="Top" Width="123" IsNumbersEnabled="False" Header="Refresh" Background="Orange"/>
-                       
+
                     </Grid>
                 </Grid>
             </metro:MetroTabItem>

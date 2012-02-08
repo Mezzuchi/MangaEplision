@@ -396,7 +396,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2 2 2 2">
                         <Grid>
-                            <Image Source="{TemplateBinding Image}" Stretch="Fill" x:Name="PART_img"/>
+                            <Image Source="{TemplateBinding Image}" Stretch="UniformToFill" x:Name="PART_img"/>
                             <ContentPresenter ContentSource="Header" HorizontalAlignment="Left" VerticalAlignment="Center" TextBlock.FontSize="18" TextBlock.TextAlignment="Center" Panel.ZIndex="100" Margin="10 0 0 0" TextBlock.Foreground="{TemplateBinding Foreground}">
                                 <ContentPresenter.Resources>
                                     <Style TargetType="{x:Type TextBlock}">
