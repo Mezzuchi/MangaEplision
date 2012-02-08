@@ -32,7 +32,11 @@
                 
             </Grid>
         </GroupBox>
-            <my:MetroTile Margin="0,0,40,67" x:Name="downloadTile" HorizontalAlignment="Right" Width="155" IsNumbersEnabled="False" Header="Download" Click="downloadTile_Click" Height="111" VerticalAlignment="Bottom" />
+            <my:MetroTile Margin="0,0,44,38" x:Name="downloadTile" HorizontalAlignment="Right" Width="151" IsNumbersEnabled="False" Header="Download" Click="downloadTile_Click" Height="140" VerticalAlignment="Bottom">
+                <my:MetroTile.Icon>
+                    <Image Source="pack://application:,,,/Resources/arrow_white.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 12 0 0" Height="90" />
+                </my:MetroTile.Icon>
+            </my:MetroTile>
         </Grid>
         <Grid Panel.ZIndex="1" x:Name="BackPanel">
             <Grid.BitmapEffect>
