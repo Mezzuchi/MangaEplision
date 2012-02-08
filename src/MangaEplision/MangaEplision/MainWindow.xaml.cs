@@ -92,7 +92,7 @@ namespace MangaEplision
                                 {
                                     DlQueueList.ItemsSource = DlQueue;
                                     DlQueueList.Items.Refresh();
-                                    QueueStatuslbl.Content = string.Format("There Are currently {0} Items in your Queue", DlQueue.Count);
+                                    QueueStatuslbl.Content = string.Format("There are currently {0} items in your queue.", DlQueue.Count);
                                     if (DlQueue.Count > 0)
                                         CallStartQueueProcess();
                                 }));
@@ -148,7 +148,8 @@ namespace MangaEplision
 
 
             Application.Current.Exit += new ExitEventHandler((o, er) => { Global.Current_Exit(o, er); });
-            this.Closing += new System.ComponentModel.CancelEventHandler((s, er) => { 
+            this.Closing += new System.ComponentModel.CancelEventHandler((s, er) =>
+            {
                 Global.SaveQueue(this.DlQueue);
 
                 metroBanner.Stop();
@@ -212,6 +213,8 @@ namespace MangaEplision
             }
         }
 
+        #region Queue Downloading
+        public bool isQueueRunning = false;
         internal void AddToQueue(BookEntry bookEntry, MangaEplision.Base.Manga manga)
         {
             if (DlQueue != null)
@@ -222,75 +225,81 @@ namespace MangaEplision
                     DlQueue.Add(qi);
                     DlQueueList.ItemsSource = DlQueue;
                     DlQueueList.Items.Refresh();
-                    QueueStatuslbl.Content = string.Format("There are currently {0} items in your queue.", DlQueue.Count);
+
+                    if (isQueueRunning == false)
+                        QueueStatuslbl.Content = string.Format("There are currently {0} items in your queue.", DlQueue.Count);
                 }
             }
         }
-
         internal void CallStartQueueProcess()
         {
-            var queueRunner = System.Threading.Tasks.Task.Factory.StartNew(() =>
+            if (isQueueRunning == false)
             {
-                int i = 0;
-                while (DlQueue.Count > 0)
+                var queueRunner = System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
-                    QueueItem q = DlQueue[i];
-                    if (Global.GetBookExist(q.Manga, q.Book))
-                        return;
-                    else
+                    int i = 0;
+                    while (DlQueue.Count > 0)
                     {
-                        q.Downloading = true;
-                        q.Status = QueueStatus.Downloading;
-                        Dispatcher.Invoke(new QueueUpDelegate((qi) =>
-                                        {
-                                            QueueStatuslbl.Content = string.Format("Downloading {1}", DlQueue.Count, q.Name);
-                                            DlQueueList.ItemsSource = DlQueue;
-                                            DlQueueList.Items.Refresh();
-                                        }), q);
+                        isQueueRunning = true;
 
-                        Global.DownloadMangaBook(q.Manga, q.Book, (dlBook) =>
+                        QueueItem q = DlQueue[i];
+                        if (Global.GetBookExist(q.Manga, q.Book))
+                            return;
+                        else
                         {
-                            q.Downloading = false; q.Status = QueueStatus.Completed; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
+                            q.Downloading = true;
+                            q.Status = QueueStatus.Downloading;
+                            Dispatcher.Invoke(new QueueUpDelegate((qi) =>
+                                            {
+                                                QueueStatuslbl.Content = string.Format("Downloading {1}", DlQueue.Count, q.Name);
+                                                DlQueueList.ItemsSource = DlQueue;
+                                                DlQueueList.Items.Refresh();
+                                            }), q);
+
+                            Global.DownloadMangaBook(q.Manga, q.Book, (dlBook) =>
                             {
-                                DlQueueList.ItemsSource = DlQueue;
-                                DlQueueList.Items.Refresh();
-                                QueueStatuslbl.Content = string.Format("Done! {0} items left in queue.", DlQueue.Count);
-                                Global.DisplayNotification(string.Format("{0} has downloaded.", q.Name), "Download Complete");
-                                CurrProg.Value = 0;
-                                Count.Content = string.Format("{0}%", 0);
-
-                                Global.BookCollection.Add(dlBook); //forcefully add the book after the download is finished.
-                                
-
-                                if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+                                q.Downloading = false; q.Status = QueueStatus.Completed; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
                                 {
-                                    //if Win7
-                                    this.TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
-                                    this.TaskbarItemInfo.ProgressValue = 0;
-                                }
-                            }));
-                        }, (curr, total) =>
-                        {
-                            Dispatcher.Invoke(new UpdateDelegate((cur, tot) =>
+                                    DlQueueList.ItemsSource = DlQueue;
+                                    DlQueueList.Items.Refresh();
+                                    QueueStatuslbl.Content = string.Format("Done! {0} items left in queue.", DlQueue.Count);
+                                    Global.DisplayNotification(string.Format("{0} has downloaded.", q.Name), "Download Complete");
+                                    CurrProg.Value = 0;
+                                    Count.Content = string.Format("{0}%", 0);
+
+                                    if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+                                    {
+                                        //if Win7
+                                        this.TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
+                                        this.TaskbarItemInfo.ProgressValue = 0;
+                                    }
+                                }));
+                            }, (curr, total) =>
                             {
-                                int percent = ((((cur < tot) ? cur + 1 : cur) * 100) / tot);
-                                CurrProg.Value = percent;
-                                Count.Content = string.Format("{0}%", percent);
-
-                                if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+                                Dispatcher.Invoke(new UpdateDelegate((cur, tot) =>
                                 {
-                                    //if Win7
-                                    this.TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal;
-                                    this.TaskbarItemInfo.ProgressValue = (double)percent / 100;
-                                }
-                            }), curr, total);
-                        });
-                        while (q.Downloading)
-                            System.Threading.Thread.Sleep(30000);
+                                    int percent = ((((cur < tot) ? cur + 1 : cur) * 100) / tot);
+                                    CurrProg.Value = percent;
+                                    Count.Content = string.Format("{0}%", percent);
+
+                                    if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+                                    {
+                                        //if Win7
+                                        this.TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal;
+                                        this.TaskbarItemInfo.ProgressValue = (double)percent / 100;
+                                    }
+                                }), curr, total);
+                            });
+                            while (q.Downloading)
+                                System.Threading.Thread.Sleep(30000);
+                        }
                     }
-                }
-            });
+
+                    isQueueRunning = false;
+                });
+            }
         }
+        #endregion
 
         private void searchTile_Click(object sender, RoutedEventArgs e)
         {
