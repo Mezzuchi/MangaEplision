@@ -1,0 +1,4 @@
+* Add a dialog for catching un handled exceptions
+* Finish the GUI for the reader window
+* Make logo
+* Implement a delete function for the collection tab.
