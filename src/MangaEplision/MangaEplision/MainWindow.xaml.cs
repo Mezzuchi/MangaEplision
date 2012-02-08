@@ -142,7 +142,11 @@ namespace MangaEplision
 
 
             Application.Current.Exit += new ExitEventHandler((o, er) => { Global.Current_Exit(o, er); });
-            this.Closing += new System.ComponentModel.CancelEventHandler((s, er) => { Global.SaveQueue(this.DlQueue); });
+            this.Closing += new System.ComponentModel.CancelEventHandler((s, er) => { 
+                Global.SaveQueue(this.DlQueue);
+
+                metroBanner.Stop();
+            });
             Application.Current.DispatcherUnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(Global.Current_DispatcherUnhandledException);
 
 
