@@ -31,7 +31,13 @@ namespace MangaEplision
             this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
             this.StateChanged += new EventHandler(MainWindow_StateChanged);
             this.SizeChanged += new SizeChangedEventHandler(MainWindow_SizeChanged);
+            this.CatalogListBox.MouseDoubleClick += new MouseButtonEventHandler(CatalogListBox_MouseDoubleClick);
             DlQueue = new List<QueueItem>();
+        }
+
+        void CatalogListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            viewInfoTile_Click(sender, e);
         }
 
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
