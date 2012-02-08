@@ -16,6 +16,8 @@ namespace MangaEplision
     using System.Threading.Tasks;
     using MangaEplision.Base;
     using System.Net;
+    using System.Windows.Threading;
+    using System.Threading;
 
     public static class Global
     {
@@ -439,11 +441,17 @@ namespace MangaEplision
         }
         internal static void DisplayNotification(string Message, string Title = "Notification!", int Duration = 5000)
         {
-            Task.Factory.StartNew(() =>
-                {
+            Thread t = new Thread(() =>
+            {
                     NotificationWindow nw = new NotificationWindow();
                     nw.Show(Message, Title, Duration);
-                });
+                    nw.Closed += (sender, e) => nw.Dispatcher.InvokeShutdown();
+                    Dispatcher.Run();
+                    nw.Closed -= (sender, e) => nw.Dispatcher.InvokeShutdown();
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            
+            t.Start();
         }
     }
     public delegate void EmptyDelegate();

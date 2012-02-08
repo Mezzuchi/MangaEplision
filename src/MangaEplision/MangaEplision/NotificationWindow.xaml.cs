@@ -69,6 +69,7 @@ namespace MangaEplision
         public void Show(string Message, string Title = "Notification!", int duration = 5000)
         {
             this.Title = Title;
+            this.tbMsg.Text = Message;
             tm.Interval = duration;
             this.Show();
             aniStry.Begin(this);

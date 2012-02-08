@@ -5,6 +5,6 @@
         xmlns:me="clr-namespace:MangaEplision"
         Title="Notification!" Height="100" Width="250" ResizeMode="CanMinimize" WindowStartupLocation="Manual">
     <Grid>
-        
+        <TextBox IsReadOnly="True"  Background="White" TextWrapping="WrapWithOverflow" Height="61" HorizontalAlignment="Left" Name="tbMsg" VerticalAlignment="Top" Width="228" />
     </Grid>
 </metro:MetroWindow>
