@@ -27,11 +27,12 @@ namespace MangaEplision
             this.Loaded += MangaReaderWin_Loaded;
             this.SizeChanged += new SizeChangedEventHandler(MangaReaderWin_SizeChanged);
             this.KeyDown += new KeyEventHandler(MangaReaderWin_KeyDown);
+
         }
 
         void MangaReaderWin_KeyDown(object sender, KeyEventArgs e)
         {
-           if (e.Key == Key.Left)
+            if (e.Key == Key.Left)
             {
                 try
                 {
@@ -63,26 +64,36 @@ namespace MangaEplision
         void updateBookDisplay()
         {
             BookControl.GetBindingExpression(WPFMitsuControls.Book.ItemsSourceProperty).UpdateTarget(); //Causes flicking but it'll do.
+            slider1.Value = BookControl.CurrentSheetIndex;
+            if (BookControl.ItemsSource == null)
+            {
+                slider1.Maximum = 0;
+            }
+            else
+            {
+                var max = ((List<BookPage>)(BookControl.ItemsSource)).Count;
+                slider1.Maximum = max - 1;
+            }
         }
         void MangaReaderWin_Loaded(object sender, RoutedEventArgs e)
         {
-          /*  var bk = (MangaEplision.Base.Book)this.DataContext;
-            foreach (var x in (List<WPFMitsuControls.BookPage>)(new ImageUriToBookPageConverter().Convert(
-                (bk.PageLocalUrls),
-                null,
-                null,
-                null)))
-            {
-                BookControl.Items.Add(x);
-            }
+            /*  var bk = (MangaEplision.Base.Book)this.DataContext;
+              foreach (var x in (List<WPFMitsuControls.BookPage>)(new ImageUriToBookPageConverter().Convert(
+                  (bk.PageLocalUrls),
+                  null,
+                  null,
+                  null)))
+              {
+                  BookControl.Items.Add(x);
+              }
 
-            /*using (var ms = new System.IO.MemoryStream(bk.Pages[0]))
-            {
-                var img = BitmapFrame.Create(ms, BitmapCreateOptions.None, BitmapCacheOption.Default);
-                TestImage.Source = img;
-                this.Background = new ImageBrush(img);
-                var p = 0;
-            }*/
+              /*using (var ms = new System.IO.MemoryStream(bk.Pages[0]))
+              {
+                  var img = BitmapFrame.Create(ms, BitmapCreateOptions.None, BitmapCacheOption.Default);
+                  TestImage.Source = img;
+                  this.Background = new ImageBrush(img);
+                  var p = 0;
+              }*/
             this.MinHeight = this.ActualHeight;
             this.MinWidth = this.ActualWidth;
         }
@@ -92,12 +103,13 @@ namespace MangaEplision
             try
             {
                 BookControl.AnimateToPreviousPage(true, 700);
+                updateBookDisplay();
             }
             catch (Exception)
             {
 
             }
-            updateBookDisplay();
+
         }
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
@@ -107,13 +119,20 @@ namespace MangaEplision
             try
             {
                 BookControl.AnimateToNextPage(true, 700);
+                updateBookDisplay();
+                this.InvalidateMeasure();
             }
             catch (Exception)
             {
 
             }
-            updateBookDisplay();
-            this.InvalidateMeasure();
+
+        }
+
+        private void slider1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (e.Source == null)
+                updateBookDisplay();
         }
     }
 }
