@@ -32,7 +32,13 @@ namespace MangaEplision
             this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
             this.StateChanged += new EventHandler(MainWindow_StateChanged);
             this.SizeChanged += new SizeChangedEventHandler(MainWindow_SizeChanged);
+            this.CatalogListBox.MouseDoubleClick += new MouseButtonEventHandler(CatalogListBox_MouseDoubleClick);
             DlQueue = new List<QueueItem>();
+        }
+
+        void CatalogListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            viewInfoTile_Click(sender, e);
         }
 
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -87,7 +93,7 @@ namespace MangaEplision
                                 {
                                     DlQueueList.ItemsSource = DlQueue;
                                     DlQueueList.Items.Refresh();
-                                    QueueStatuslbl.Content = string.Format("There Are currently {0} Items in your Queue", DlQueue.Count);
+                                    QueueStatuslbl.Content = string.Format("There are currently {0} items in your queue.", DlQueue.Count);
                                     if (DlQueue.Count > 0)
                                         CallStartQueueProcess();
                                 }));
@@ -143,7 +149,8 @@ namespace MangaEplision
 
 
             Application.Current.Exit += new ExitEventHandler((o, er) => { Global.Current_Exit(o, er); });
-            this.Closing += new System.ComponentModel.CancelEventHandler((s, er) => { 
+            this.Closing += new System.ComponentModel.CancelEventHandler((s, er) =>
+            {
                 Global.SaveQueue(this.DlQueue);
 
                 metroBanner.Stop();
@@ -207,6 +214,8 @@ namespace MangaEplision
             }
         }
 
+        #region Queue Downloading
+        public bool isQueueRunning = false;
         internal void AddToQueue(BookEntry bookEntry, MangaEplision.Base.Manga manga)
         {
             if (DlQueue != null)
@@ -217,19 +226,22 @@ namespace MangaEplision
                     DlQueue.Add(qi);
                     DlQueueList.ItemsSource = DlQueue;
                     DlQueueList.Items.Refresh();
-                    QueueStatuslbl.Content = string.Format("There Are currently {0} Items in your Queue", DlQueue.Count);
+
+                    if (isQueueRunning == false)
+                        QueueStatuslbl.Content = string.Format("There are currently {0} items in your queue.", DlQueue.Count);
                 }
             }
         }
-
         internal void CallStartQueueProcess()
         {
+            QueueRunning = true;
             var queueRunner = System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
-                QueueRunning = true;
                 int i = 0;
                 while (DlQueue.Count > 0)
                 {
+                    isQueueRunning = true;
+
                     QueueItem q = DlQueue[i];
                     if (Global.GetBookExist(q.Manga, q.Book))
                         return;
@@ -243,14 +255,15 @@ namespace MangaEplision
                                             DlQueueList.ItemsSource = DlQueue;
                                             DlQueueList.Items.Refresh();
                                         }), q);
-                        Global.DownloadMangaBook(q.Manga, q.Book, () =>
+
+                        Global.DownloadMangaBook(q.Manga, q.Book, (dlBook) =>
                         {
                             q.Downloading = false; q.Status = QueueStatus.Completed; DlQueue.Remove(q); Dispatcher.Invoke(new EmptyDelegate(() =>
                             {
                                 DlQueueList.ItemsSource = DlQueue;
                                 DlQueueList.Items.Refresh();
-                                QueueStatuslbl.Content = string.Format("Done! {0} Items Left in Queue", DlQueue.Count);
-                                Global.DisplayNotification(string.Format("{0} Is done Downloading", q.Name), "Download Complete");
+                                QueueStatuslbl.Content = string.Format("Done! {0} items left in queue.", DlQueue.Count);
+                                Global.DisplayNotification(string.Format("{0} has downloaded.", q.Name), "Download Complete");
                                 CurrProg.Value = 0;
                                 Count.Content = string.Format("{0}%", 0);
 
@@ -285,6 +298,7 @@ namespace MangaEplision
                 Global.DisplayNotification("Your Queue Has Been Emptied!", "Empty Queue!");
             });
         }
+        #endregion
 
         private void searchTile_Click(object sender, RoutedEventArgs e)
         {

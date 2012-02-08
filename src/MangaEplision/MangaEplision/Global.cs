@@ -318,9 +318,9 @@ namespace MangaEplision
         {
             return str.Replace(":", "-");
         }
-        public static void DownloadMangaBook(Manga manga, BookEntry book, Action act = null, Action<int,int> Pcount = null)
+        public static void DownloadMangaBook(Manga manga, BookEntry book, Action<Book> act = null, Action<int,int> Pcount = null)
         {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew<Book>(() =>
                 {
                     try
                     {
@@ -355,6 +355,8 @@ namespace MangaEplision
                             fs.Close();
                         }
                         new DirectoryInfo(mangadir).Attributes = FileAttributes.ReadOnly;
+
+                        return bk;
                     }
                     catch (Exception ex)
                     {
@@ -362,10 +364,11 @@ namespace MangaEplision
                         System.Diagnostics.Debug.Write(ex);
 #endif
                     }
+                    return null;
                 }).ContinueWith((tsk) =>
                     {
                         if (act != null)
-                            act();
+                            act(tsk.Result);
                     });
 
         }

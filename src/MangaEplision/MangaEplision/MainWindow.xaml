@@ -110,7 +110,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Label Name="QueueStatuslbl" Content="Your Queue is Empty" Grid.Column="0"  Grid.ColumnSpan="2"/>
+                <Label Name="QueueStatuslbl" Content="Your queue is empty." Grid.Column="0"  Grid.ColumnSpan="2"/>
                 <metro:MetroProgressBar x:Name="CurrProg" Grid.Column="2"  Height="20"/>
                 <Label Name="Count" Grid.Column="2"  Content="0%" Margin="127,0,0,0" />
             </Grid>

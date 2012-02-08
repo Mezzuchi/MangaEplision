@@ -54,5 +54,12 @@ namespace MangaEplision
                 ((MainWindow)Application.Current.MainWindow).metroTabControl1.SelectedIndex = 2;
             }
         }
+
+        private void BooksLsView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ((MainWindow)Application.Current.MainWindow).AddToQueue((BookEntry)BooksLsView.SelectedItem, (MangaEplision.Base.Manga)this.DataContext);
+            if (!((MainWindow)Application.Current.MainWindow).QueueRunning)
+                ((MainWindow)Application.Current.MainWindow).CallStartQueueProcess();
+        }
     }
 }

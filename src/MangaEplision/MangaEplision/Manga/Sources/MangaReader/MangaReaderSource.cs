@@ -289,7 +289,7 @@ namespace MangaEplision.Sources.MangaReader
                 manganamestr = (manganamestr.EndsWith("\"") ? manganamestr.Remove(manganamestr.Length -1) : manganamestr);
 
                 var mangaurl = "http://mangareader.net" + manganamestr;
-                be = new BookEntry(GetMangaInfoByUrl(mangaurl));
+                be = new BookEntry(GetMangaInfoByUrl(mangaurl)); //Should implement a cached version for Global
 
 
 

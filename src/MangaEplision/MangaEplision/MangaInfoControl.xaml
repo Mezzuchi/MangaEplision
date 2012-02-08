@@ -11,7 +11,7 @@
             <Grid Margin="0,65,229,0">
                 <TextBlock  Name="textBlock1" Text="{Binding Description}" Background="Transparent" TextWrapping="Wrap" FontSize="15" Margin="0,0,0,335" />
                 <my:MetroGroupBox  x:Name="metroGroupBox1" NotificationsCount="{Binding ElementName=BooksLsView, Path=ItemsSource.Count,FallbackValue=0}" Header="Books" Foreground="Black" Margin="0,0,0,26" VerticalAlignment="Bottom">
-                    <ListView x:Name="BooksLsView" ItemsSource="{Binding Books}" FontSize="13" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="200">
+                    <ListView x:Name="BooksLsView" ItemsSource="{Binding Books}" FontSize="13" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="200" MouseDoubleClick="BooksLsView_MouseDoubleClick">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200"/>
