@@ -516,6 +516,10 @@
                     Property="Visibility"
                     Value="Visible" />
                         </Trigger>
+                        <Trigger Property="ResizeMode" Value="CanMinimize">
+                            <Setter TargetName="PART_MinBtn" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="PART_MaxBtn" Property="Visibility" Value="Hidden" />
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
