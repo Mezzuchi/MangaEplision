@@ -216,7 +216,7 @@ namespace MangaEplision
                     DlQueue.Add(qi);
                     DlQueueList.ItemsSource = DlQueue;
                     DlQueueList.Items.Refresh();
-                    QueueStatuslbl.Content = string.Format("There Are currently {0} Items in your Queue", DlQueue.Count);
+                    QueueStatuslbl.Content = string.Format("There are currently {0} items in your Queue.", DlQueue.Count);
                 }
             }
         }
@@ -247,8 +247,8 @@ namespace MangaEplision
                             {
                                 DlQueueList.ItemsSource = DlQueue;
                                 DlQueueList.Items.Refresh();
-                                QueueStatuslbl.Content = string.Format("Done! {0} Items Left in Queue", DlQueue.Count);
-                                Global.DisplayNotification(string.Format("{0} Is done Downloading", q.Name), "Download Complete");
+                                QueueStatuslbl.Content = string.Format("Done! {0} items left in Queue.", DlQueue.Count);
+                                Global.DisplayNotification(string.Format("{0} is done downloading", q.Name), "Download Complete");
                                 CurrProg.Value = 0;
                                 Count.Content = string.Format("{0}%", 0);
 
