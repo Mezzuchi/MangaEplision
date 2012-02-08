@@ -131,8 +131,7 @@ namespace MangaEplision
 
         private void slider1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (e.Source == null)
-                updateBookDisplay();
+            updateBookDisplay();
         }
     }
 }
