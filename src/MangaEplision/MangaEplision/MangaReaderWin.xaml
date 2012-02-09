@@ -3,13 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mitsu="clr-namespace:WPFMitsuControls;assembly=WPFMitsuControls"
         xmlns:convert="clr-namespace:MangaEplision.Converters"
-        xmlns:metro="clr-namespace:MangaEplision.Metro"
-        Title="{Binding Name}" Height="Auto" Width="Auto" Background="Black" WindowState="Maximized" WindowStyle="SingleBorderWindow" ResizeMode="NoResize">
+        xmlns:metro="clr-namespace:MangaEplision.Metro" Height="Auto" Width="Auto" Background="Black" WindowState="Maximized" WindowStyle="SingleBorderWindow" ResizeMode="NoResize" x:Name="this">
+    <Window.Title>
+        <MultiBinding StringFormat="{}{0} - {1}">
+            <Binding Path="Name"/>
+            <Binding Path="ParentManga.MangaName"/>
+        </MultiBinding>
+    </Window.Title>
     <Window.Resources>
         <ResourceDictionary>
             <convert:ImageUriToBookPageConverter x:Key="IBPCon"/>
             <convert:ImageUriToBookPageConverter x:Key="ImageByteToBookPageConverter1" />
             <convert:DisplayModeConverter x:Key="DisplayModeConverter1" />
+            <convert:PercentageConverter x:Key="PerConv"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
@@ -18,17 +24,30 @@
 
             </mitsu:Book>
         </Grid>
-        <Grid Height="54" VerticalAlignment="Bottom" Panel.ZIndex="100" Margin="69,0,72,0" Background="Gray" Opacity="75">
+        <Grid x:Name="Ctrlgrid" Height="54" VerticalAlignment="Bottom" Panel.ZIndex="100" Margin="69,0,72,0" Background="Gray" Opacity="75" Width="{Binding ElementName=this, Path=ActualWidth, Converter={StaticResource PerConv}, ConverterParameter='0.7'}">
             <!--<Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Color="Black" Offset="1"/>
                     <GradientStop Color="Gray" Offset="0"/>
                 </LinearGradientBrush>
             </Grid.Background>-->
-            <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="76,16,0,0" x:Name="previousBtn" VerticalAlignment="Top" Click="previousBtn_Click"/>
-            <metro:MetroCircleButton  Height="25" Width="25" HorizontalAlignment="Left" Margin="107,16,0,0" x:Name="nextBtn" VerticalAlignment="Top" Click="nextBtn_Click"/>
-            <Slider Height="23" Margin="138,18,110,0" Name="slider1" VerticalAlignment="Top" Minimum="0" Value="{Binding ElementName=BookControl,Path=CurrentSheetIndex,Mode=TwoWay,BindsDirectlyToSource=True}" ValueChanged="slider1_ValueChanged" />
-            <CheckBox Content="Zoom on Page?" Height="16" HorizontalAlignment="Left" Margin="406,32,0,0" Name="checkBox1" VerticalAlignment="Top" Foreground="White" IsChecked="{Binding ElementName=BookControl,Path=DisplayMode,Mode=TwoWay,Converter={StaticResource DisplayModeConverter1}}"  />
+            <StackPanel Height="25" Margin="28,0,302,0" Orientation="Horizontal">
+                <metro:MetroCircleButton  Height="25" Width="25" x:Name="previousBtn" Click="previousBtn_Click">
+                    <Image Source="pack://application:,,,/Resources/arrow_white.png"/>
+                    <metro:MetroCircleButton.RenderTransform>
+                        <RotateTransform Angle="90"/>
+                    </metro:MetroCircleButton.RenderTransform>
+                </metro:MetroCircleButton>
+                <metro:MetroCircleButton  Height="25" Width="25" x:Name="nextBtn" Click="nextBtn_Click">
+                    <Image Source="pack://application:,,,/Resources/arrow_white.png"/>
+                    <metro:MetroCircleButton.RenderTransform>
+                        <RotateTransform Angle="270" CenterX="7" CenterY="18"/>
+                    </metro:MetroCircleButton.RenderTransform>
+                </metro:MetroCircleButton>
+            </StackPanel>
+            <Slider Height="23" Name="slider1" Margin="136,0,6,0" Minimum="0" Value="{Binding ElementName=BookControl,Path=CurrentSheetIndex,Mode=TwoWay,BindsDirectlyToSource=True}" ValueChanged="slider1_ValueChanged"/>
+            <CheckBox Content="Zoom on Page?" Height="16" Name="checkBox1" Foreground="White" IsChecked="{Binding ElementName=BookControl,Path=DisplayMode,Mode=TwoWay,Converter={StaticResource DisplayModeConverter1}}" Width="110" Margin="264,32,6,6" />
+
         </Grid>
     </Grid>
 </Window>

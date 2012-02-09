@@ -27,7 +27,6 @@ namespace MangaEplision
             this.Loaded += MangaReaderWin_Loaded;
             this.SizeChanged += new SizeChangedEventHandler(MangaReaderWin_SizeChanged);
             this.KeyDown += new KeyEventHandler(MangaReaderWin_KeyDown);
-
         }
 
         void MangaReaderWin_KeyDown(object sender, KeyEventArgs e)
@@ -74,6 +73,7 @@ namespace MangaEplision
                 var max = ((List<BookPage>)(BookControl.ItemsSource)).Count;
                 slider1.Maximum = max - 1;
             }
+            slider1.Minimum = 0;
         }
         void MangaReaderWin_Loaded(object sender, RoutedEventArgs e)
         {
@@ -96,6 +96,8 @@ namespace MangaEplision
               }*/
             this.MinHeight = this.ActualHeight;
             this.MinWidth = this.ActualWidth;
+
+            slider1.Minimum = -1;
         }
 
         private void previousBtn_Click(object sender, RoutedEventArgs e)
