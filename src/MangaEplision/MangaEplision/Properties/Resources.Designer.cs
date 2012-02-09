@@ -60,6 +60,13 @@ namespace MangaEplision.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap appicon {
+            get {
+                object obj = ResourceManager.GetObject("appicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap arrow_black {
             get {
                 object obj = ResourceManager.GetObject("arrow_black", resourceCulture);
