@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:metro="clr-namespace:MangaEplision.Metro"
         xmlns:me="clr-namespace:MangaEplision"
-        Title="MangaEplision" Height="612" Width="853" WindowStartupLocation="CenterScreen" Background="AliceBlue" x:Name="this" xmlns:my="clr-namespace:MangaEplision.Converters">
+        Title="MangaEplision" Height="612" Width="853" WindowStartupLocation="CenterScreen" Background="AliceBlue" x:Name="this" xmlns:my="clr-namespace:MangaEplision.Converters" Icon="pack://application:,,,/Resources/appicon.png">
     <metro:MetroWindow.Resources>
         <my:IntCalcConverter x:Key="IntCalcConverter1" />
     </metro:MetroWindow.Resources>

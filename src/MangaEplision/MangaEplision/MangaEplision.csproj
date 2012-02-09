@@ -203,6 +203,9 @@
   <ItemGroup>
     <Resource Include="Resources\arrow_white.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\appicon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
