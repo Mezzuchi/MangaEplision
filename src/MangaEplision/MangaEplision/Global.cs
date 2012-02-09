@@ -316,7 +316,7 @@ namespace MangaEplision
         }
         private static string CommonReplace(this string str)
         {
-            return str.Replace(":", "-");
+            return str.Replace(":", "-").Replace("\\","-");
         }
         public static void DownloadMangaBook(Manga manga, BookEntry book, Action<Book> act = null, Action<int,int> Pcount = null)
         {
