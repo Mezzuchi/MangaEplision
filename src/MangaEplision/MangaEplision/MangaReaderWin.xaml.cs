@@ -77,18 +77,24 @@ namespace MangaEplision
         }
         void updateBookDisplay()
         {
-            BookControl.GetBindingExpression(WPFMitsuControls.Book.ItemsSourceProperty).UpdateTarget(); //Causes flicking but it'll do.
-            slider1.Value = BookControl.CurrentSheetIndex;
-            if (BookControl.ItemsSource == null)
+            try
             {
-                slider1.Maximum = 0;
+                BookControl.GetBindingExpression(WPFMitsuControls.Book.ItemsSourceProperty).UpdateTarget(); //Causes flicking but it'll do.
+
+                slider1.Value = BookControl.CurrentSheetIndex;
+                if (BookControl.ItemsSource == null)
+                {
+                    slider1.Maximum = 0;
+                }
+                else
+                {
+                    var max = ((List<BookPage>)(BookControl.ItemsSource)).Count;
+                    slider1.Maximum = max - 1;
+                }
+                slider1.Minimum = 0;
             }
-            else
-            {
-                var max = ((List<BookPage>)(BookControl.ItemsSource)).Count;
-                slider1.Maximum = max - 1;
-            }
-            slider1.Minimum = 0;
+            catch (Exception)
+            { }
         }
         void MangaReaderWin_Loaded(object sender, RoutedEventArgs e)
         {
