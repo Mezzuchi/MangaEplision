@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:metro="clr-namespace:MangaEplision.Metro"
         xmlns:me="clr-namespace:MangaEplision"
-        Title="Notification!" Height="100" Width="250" ResizeMode="CanMinimize" WindowStartupLocation="Manual" ShowInTaskbar="False" Topmost="True">
+        Title="Notification!" Height="100" Width="222" ResizeMode="CanMinimize" WindowStartupLocation="Manual" ShowInTaskbar="False" Topmost="True">
     <Grid>
         <TextBox IsReadOnly="True"  Background="White" TextWrapping="WrapWithOverflow" Height="61" HorizontalAlignment="Left" Name="tbMsg" VerticalAlignment="Top" Width="228" />
     </Grid>
