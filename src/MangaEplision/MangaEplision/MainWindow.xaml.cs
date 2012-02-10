@@ -110,12 +110,24 @@ namespace MangaEplision
                             {
                                 foreach (BookEntry be in Global.MangaSource.GetNewReleasesOfToday(3))
                                 {
-                                    Dispatcher.Invoke(new EmptyDelegate(
+                                    Dispatcher.BeginInvoke(new EmptyDelegate(
                                         () =>
                                         {
                                             var slide = new MetroBannerSlide();
                                             slide.Header = be.Name + " / " + be.ParentManga.MangaName;
-                                            slide.Image = new BitmapImage(new Uri(be.ParentManga.BookImageUrl));
+
+                                            var bitmp = new BitmapImage(new Uri(be.ParentManga.BookImageUrl));
+
+                                            EventHandler ha = null;
+                                            ha = new EventHandler((a, b) =>
+                                             {
+                                                 bitmp.DownloadCompleted -= ha;
+                                                 bitmp.Freeze();
+                                                 slide.Image = bitmp;
+                                                 
+                                             });
+                                            bitmp.DownloadCompleted += ha;
+                                            
                                             slide.FontSize = 25;
                                             slide.Foreground = Brushes.Red;
                                             slide.FontStyle = FontStyles.Oblique;
@@ -123,17 +135,18 @@ namespace MangaEplision
                                         }));
                                 }
 
-                                Dispatcher.Invoke(new EmptyDelegate(() =>
+                                Dispatcher.BeginInvoke(new EmptyDelegate(() =>
                                     {
                                         metroBanner.Slide = metroBanner.Slides[0];
                                         metroBanner.Start();
+                                        
 
                                         LatestReleaseGB.NotificationsCount = metroBanner.Slides.Count;
                                     }));
                             }
                         });
 
-                        Dispatcher.Invoke(
+                        Dispatcher.BeginInvoke(
                             new EmptyDelegate(() =>
                                 {
                                     try
@@ -202,7 +215,7 @@ namespace MangaEplision
                         }).ContinueWith((tsk) =>
                             {
                                 if (tsk.Exception == null)
-                                    Dispatcher.Invoke(
+                                    Dispatcher.BeginInvoke(
                                         new EmptyDelegate(
                                             () =>
                                             {

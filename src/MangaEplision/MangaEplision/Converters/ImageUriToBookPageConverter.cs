@@ -33,7 +33,16 @@ namespace MangaEplision.Converters
                 try
                 {
                     var img = new Image();
-                    img.Source = new BitmapImage(new Uri(by));
+
+                    var bitmp = new BitmapImage();
+                    bitmp.BeginInit();
+                    bitmp.UriSource = new Uri(by);
+                    bitmp.CacheOption = BitmapCacheOption.None;
+                    bitmp.EndInit();
+
+                    bitmp.Freeze();
+                    img.Source = bitmp;
+
                     WPFMitsuControls.BookPage bp = new WPFMitsuControls.BookPage();
                     bp.Content = new Grid();
                     ((Grid)bp.Content).Children.Add(img);

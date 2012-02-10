@@ -109,12 +109,12 @@ namespace MangaEplision.Metro
 
         void slideshow_prog_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.Dispatcher.Invoke(new EmptyDelegate(() => progbar.Value -= 1));
+            this.Dispatcher.BeginInvoke(new EmptyDelegate(() => progbar.Value -= 1));
         }
 
         void slideshow_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.Dispatcher.Invoke(new EmptyDelegate(delegate()
+            this.Dispatcher.BeginInvoke(new EmptyDelegate(delegate()
             {
                 NextSlide();
                 progbar.Maximum = 7;
