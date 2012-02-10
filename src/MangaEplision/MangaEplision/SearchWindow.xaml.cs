@@ -62,7 +62,7 @@ namespace MangaEplision
             List<string> matches = new List<string>();
             for (int i = 0; i < Global.Mangas.Length + 1; i++)
             {
-                if (Global.Mangas[(i < Global.Mangas.Length) ? i : i - 1].Contains(SearchTerm.Text))
+                if (Global.Mangas[(i < Global.Mangas.Length) ? i : i - 1].ToLower().Contains(SearchTerm.Text.ToLower()))
                     matches.Add(Global.Mangas[(i < Global.Mangas.Length) ? i : i - 1]);
             }
             CatalogListBox.ItemsSource = matches;
