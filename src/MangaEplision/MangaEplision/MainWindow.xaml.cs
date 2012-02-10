@@ -303,6 +303,9 @@ namespace MangaEplision
                                 CurrProg.Value = 0;
                                 Count.Content = string.Format("{0}%", 0);
 
+                                Global.CollectionBooks.Add(dlBook);
+                                Global.BookCollection = Global.CollectionBooks;
+
                                 if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
                                 {
                                     //if Win7
@@ -331,7 +334,7 @@ namespace MangaEplision
                     }
                 }
                 QueueRunning = false;
-                Global.DisplayNotification("Your Queue Has Been Emptied!", "Empty Queue!");
+                Global.DisplayNotification("Your queue has been emptied!", "Empty Queue!");
             });
         }
         #endregion

@@ -18,6 +18,7 @@ namespace MangaEplision
     using System.Net;
     using System.Windows.Threading;
     using System.Threading;
+    using System.Collections.ObjectModel;
 
     public static class Global
     {
@@ -57,7 +58,7 @@ namespace MangaEplision
 
             fswatch.Created += new FileSystemEventHandler(fswatch_Created);
 
-            CollectionBooks = new List<Book>();
+            CollectionBooks = new ObservableCollection<Book>();
 
             LoadCollection();
 
@@ -256,13 +257,13 @@ namespace MangaEplision
 
         private static FileSystemWatcher fswatch = null;
 
-        public static List<Book> CollectionBooks = null;
-        public static List<Book> BookCollection
+        public static ObservableCollection<Book> CollectionBooks = null;
+        public static ObservableCollection<Book> BookCollection
         {
             get
             {
-                return (List<Book>)Application.Current.Dispatcher.Invoke(new EmptyReturnDelegate(() =>
-                    (List<Book>)Application.Current.MainWindow.GetValue(BookCollectionProperty)));
+                return (ObservableCollection<Book>)Application.Current.Dispatcher.Invoke(new EmptyReturnDelegate(() =>
+                    (ObservableCollection<Book>)Application.Current.MainWindow.GetValue(BookCollectionProperty)));
             }
             set
             {
@@ -277,7 +278,7 @@ namespace MangaEplision
                         }));
             }
         }
-        public static readonly DependencyProperty BookCollectionProperty = DependencyProperty.Register("BookCollection", typeof(List<Book>), typeof(Global));
+        public static readonly DependencyProperty BookCollectionProperty = DependencyProperty.Register("BookCollection", typeof(ObservableCollection<Book>), typeof(Global));
         #endregion
 
         private static void LoadSource()
@@ -371,7 +372,8 @@ namespace MangaEplision
                     {
                         if (act != null)
                             act(tsk.Result);
-                    }).Dispose();
+                        tsk.Dispose();
+                    });
 
         }
 
