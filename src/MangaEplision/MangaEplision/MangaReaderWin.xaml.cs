@@ -25,8 +25,23 @@ namespace MangaEplision
         {
             InitializeComponent();
             this.Loaded += MangaReaderWin_Loaded;
-            this.SizeChanged += new SizeChangedEventHandler(MangaReaderWin_SizeChanged);
-            this.KeyDown += new KeyEventHandler(MangaReaderWin_KeyDown);
+            this.SizeChanged += MangaReaderWin_SizeChanged;
+            this.KeyDown += MangaReaderWin_KeyDown;
+            this.Unloaded += MangaReaderWin_Unloaded;
+        }
+
+        void MangaReaderWin_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.Loaded -= MangaReaderWin_Loaded;
+            this.SizeChanged -= MangaReaderWin_SizeChanged;
+            this.KeyDown -= MangaReaderWin_KeyDown;
+            this.Unloaded -= MangaReaderWin_Unloaded;
+
+            BindingOperations.ClearAllBindings(this);
+            BindingOperations.ClearAllBindings(BookControl);
+            BindingOperations.ClearAllBindings(Ctrlgrid);
+            BindingOperations.ClearAllBindings(slider1);
+            BindingOperations.ClearAllBindings(checkBox1);
         }
 
         void MangaReaderWin_KeyDown(object sender, KeyEventArgs e)
@@ -134,6 +149,10 @@ namespace MangaEplision
         private void slider1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             updateBookDisplay();
+        }
+        ~MangaReaderWin()
+        {
+            //GC.Collect();
         }
     }
 }

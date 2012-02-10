@@ -125,6 +125,7 @@ namespace MangaEplision
                 {
                     var bf = new BinaryFormatter();
                     bf.Serialize(fs, book);
+                    fs.Close();
                 }
 
                 return book;
@@ -145,6 +146,7 @@ namespace MangaEplision
                         var bf = new BinaryFormatter();
                         var book = (Manga)bf.Deserialize(fs);
                         CachedManga.Add(book);
+                        fs.Close();
                     }
                 }
                 catch (Exception) { }
@@ -369,7 +371,7 @@ namespace MangaEplision
                     {
                         if (act != null)
                             act(tsk.Result);
-                    });
+                    }).Dispose();
 
         }
 
@@ -412,6 +414,7 @@ namespace MangaEplision
                     var fs = new FileStream(f, FileMode.Open);
                     DlQueue.Add((QueueItem)bf.Deserialize(fs));
                     fs.Close();
+                    fs.Dispose();
                 }
             }
             catch (Exception ex)
@@ -425,8 +428,9 @@ namespace MangaEplision
 
         internal static void CleanupQueueDir()
         {
-            Task.Factory.StartNew(() =>
-                {
+            /*Task tk = null;
+            tk = Task.Factory.StartNew(() =>
+                { */
                     try
                     {
                         foreach (string f in Directory.EnumerateFiles(QueueDir))
@@ -440,7 +444,9 @@ namespace MangaEplision
                         System.Diagnostics.Debug.Write(ex);
 #endif
                     }
-                });
+            /*    });
+            tk.Wait();
+            tk.Dispose(); */
         }
         internal static void DisplayNotification(string Message, string Title = "Notification!", int Duration = 5000)
         {
@@ -455,6 +461,7 @@ namespace MangaEplision
             t.SetApartmentState(ApartmentState.STA);
             
             t.Start();
+            
         }
     }
     public delegate void EmptyDelegate();

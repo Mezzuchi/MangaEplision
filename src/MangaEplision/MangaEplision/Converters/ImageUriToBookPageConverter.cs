@@ -30,20 +30,20 @@ namespace MangaEplision.Converters
 
             foreach (var by in coll)
             {
-                    try
-                    {
-                        var img = new Image();
-                        img.Source = new BitmapImage(new Uri(by));
-                        WPFMitsuControls.BookPage bp = new WPFMitsuControls.BookPage();
-                        bp.Content = new Grid();
-                        ((Grid)bp.Content).Children.Add(img);
-                        pages.Add(bp);
-                    }
-                    catch (Exception)
-                    {
-
-                    }
+                try
+                {
+                    var img = new Image();
+                    img.Source = new BitmapImage(new Uri(by));
+                    WPFMitsuControls.BookPage bp = new WPFMitsuControls.BookPage();
+                    bp.Content = new Grid();
+                    ((Grid)bp.Content).Children.Add(img);
+                    pages.Add(bp);
                 }
+                catch (Exception)
+                {
+
+                }
+            }
 
             return pages;
         }

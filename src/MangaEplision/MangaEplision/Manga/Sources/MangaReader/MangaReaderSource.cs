@@ -266,7 +266,7 @@ namespace MangaEplision.Sources.MangaReader
         #endregion
 
 
-        public BookEntry[] GetNewReleasesOfToday()
+        public BookEntry[] GetNewReleasesOfToday(int amount = 5)
         {
             var html = GetHtml("http://mangareader.net/");
 
@@ -275,8 +275,12 @@ namespace MangaEplision.Sources.MangaReader
 
             List<BookEntry> entries = new List<BookEntry>();
 
+            int i = 0;
             foreach (Match match in matchedmangas)
             {
+                if (i == amount)
+                    break;
+
                 BookEntry be = null;
 
                 var manganame = Regex.Match(match.Value,
@@ -309,6 +313,7 @@ namespace MangaEplision.Sources.MangaReader
                 be.Url = "http://mangareader.net" + chpurl;
 
                 entries.Add(be);
+                i++;
             }
 
             return entries.ToArray();
