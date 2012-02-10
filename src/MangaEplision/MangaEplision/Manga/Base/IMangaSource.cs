@@ -12,6 +12,6 @@ namespace MangaEplision.Base
         Dictionary<string,string> GetAvailableManga();
         Manga GetMangaInfo(string name);
         Manga GetMangaInfoByUrl(string url);
-        BookEntry[] GetNewReleasesOfToday();
+        BookEntry[] GetNewReleasesOfToday(int amount = 5);
     }
 }

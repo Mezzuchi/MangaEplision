@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 using System.Timers;
+using System.Threading;
 
 namespace MangaEplision.Metro
 {
@@ -52,8 +53,8 @@ namespace MangaEplision.Metro
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MetroBanner), new FrameworkPropertyMetadata(typeof(MetroBanner)));
         }
-        private Timer slideshow = new Timer();
-        private Timer slideshow_prog = new Timer();
+        private System.Timers.Timer slideshow = new System.Timers.Timer();
+        private System.Timers.Timer slideshow_prog = new System.Timers.Timer();
         private MetroProgressBar progbar = null;
         public MetroBanner()
         {
@@ -108,16 +109,17 @@ namespace MangaEplision.Metro
 
         void slideshow_prog_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.Dispatcher.Invoke(new EmptyDelegate(() => progbar.Value -= 1));
+            this.Dispatcher.BeginInvoke(new EmptyDelegate(() => progbar.Value -= 1));
         }
 
         void slideshow_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.Dispatcher.Invoke(new EmptyDelegate(delegate()
+            this.Dispatcher.BeginInvoke(new EmptyDelegate(delegate()
             {
                 NextSlide();
                 progbar.Maximum = 7;
                 progbar.Value = 7;
+                Thread.Sleep(50);
             }));
         }
         private delegate void EmptyDelegate();

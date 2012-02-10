@@ -58,6 +58,8 @@ namespace MangaEplision.Metro
 
         void MetroBannerSlide_Unloaded(object sender, RoutedEventArgs e)
         {
+            BindingOperations.ClearAllBindings(this);
+            BindingOperations.ClearAllBindings(ImageControl);
             this.Loaded -= new RoutedEventHandler(MetroBannerSlide_Loaded);
             this.Unloaded -= new RoutedEventHandler(MetroBannerSlide_Unloaded);
         }
@@ -127,6 +129,6 @@ namespace MangaEplision.Metro
         }
 
         public Image ImageControl { get { 
-            return (Image)this.Template.FindName("PART_img",null); } }
+            return (Image)this.Template.FindName("PART_img",this); } }
     }
 }

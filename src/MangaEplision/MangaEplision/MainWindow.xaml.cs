@@ -68,7 +68,7 @@ namespace MangaEplision
             }
 
 
-            Task.Factory.StartNew(() =>
+            var mainTsk = Task.Factory.StartNew(() =>
                 {
                     #region
                     System.Threading.Thread.Sleep(100);
@@ -87,7 +87,7 @@ namespace MangaEplision
                         }));
                 }).ContinueWith((task) =>
                     {
-                        Task.Factory.StartNew(() =>
+                        var t1 = Task.Factory.StartNew(() =>
                         {
                             if (Global.SavedQueue())
                             {
@@ -104,18 +104,30 @@ namespace MangaEplision
                             }
                         });
 
-                        Task.Factory.StartNew(() =>
+                        var t2 = Task.Factory.StartNew(() =>
                         {
                             if (NetworkUtils.IsConnectedToInternet())
                             {
-                                foreach (BookEntry be in Global.MangaSource.GetNewReleasesOfToday())
+                                foreach (BookEntry be in Global.MangaSource.GetNewReleasesOfToday(3))
                                 {
-                                    Dispatcher.Invoke(new EmptyDelegate(
+                                    Dispatcher.BeginInvoke(new EmptyDelegate(
                                         () =>
                                         {
                                             var slide = new MetroBannerSlide();
                                             slide.Header = be.Name + " / " + be.ParentManga.MangaName;
-                                            slide.Image = new BitmapImage(new Uri(be.ParentManga.BookImageUrl));
+
+                                            var bitmp = new BitmapImage(new Uri(be.ParentManga.BookImageUrl));
+
+                                            EventHandler ha = null;
+                                            ha = new EventHandler((a, b) =>
+                                             {
+                                                 bitmp.DownloadCompleted -= ha;
+                                                 bitmp.Freeze();
+                                                 slide.Image = bitmp;
+                                                 
+                                             });
+                                            bitmp.DownloadCompleted += ha;
+                                            
                                             slide.FontSize = 25;
                                             slide.Foreground = Brushes.Red;
                                             slide.FontStyle = FontStyles.Oblique;
@@ -123,17 +135,18 @@ namespace MangaEplision
                                         }));
                                 }
 
-                                Dispatcher.Invoke(new EmptyDelegate(() =>
+                                Dispatcher.BeginInvoke(new EmptyDelegate(() =>
                                     {
                                         metroBanner.Slide = metroBanner.Slides[0];
                                         metroBanner.Start();
+                                        
 
                                         LatestReleaseGB.NotificationsCount = metroBanner.Slides.Count;
                                     }));
                             }
                         });
 
-                        Dispatcher.Invoke(
+                        Dispatcher.BeginInvoke(
                             new EmptyDelegate(() =>
                                 {
                                     try
@@ -147,8 +160,28 @@ namespace MangaEplision
                                     {
                                     }
                                 }));
+                        t1.Wait();
+                        t2.Wait();
+                        t1.Dispose();
+                        t2.Dispose();
                     });
 
+            System.Timers.Timer t = new System.Timers.Timer();
+            System.Timers.ElapsedEventHandler h = null;
+            h = new System.Timers.ElapsedEventHandler((a, b) =>
+                 {
+                     mainTsk.Wait();
+                     mainTsk.Dispose();
+                     t.Elapsed -= h;
+                     t.Stop();
+                     t.Dispose();
+
+                     GC.KeepAlive(metroBanner);
+                     GC.Collect();
+                 }); ;
+            t.Elapsed += h;
+            t.Interval = 10000;
+            t.Start();
 
 
             Application.Current.Exit += new ExitEventHandler((o, er) => { Global.Current_Exit(o, er); });
@@ -159,7 +192,6 @@ namespace MangaEplision
                 metroBanner.Stop();
             });
             Application.Current.DispatcherUnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(Global.Current_DispatcherUnhandledException);
-
 
         }
         private delegate void EmptyDelegate();
@@ -183,7 +215,7 @@ namespace MangaEplision
                         }).ContinueWith((tsk) =>
                             {
                                 if (tsk.Exception == null)
-                                    Dispatcher.Invoke(
+                                    Dispatcher.BeginInvoke(
                                         new EmptyDelegate(
                                             () =>
                                             {
@@ -198,6 +230,7 @@ namespace MangaEplision
                                             }));
                                 else
                                     MessageBox.Show("There was an error grabbing information on that manga!" + Environment.NewLine + "Geeky error details: " + Environment.NewLine + Environment.NewLine + tsk.Exception.ToString() + Environment.NewLine + Environment.NewLine + "NOTE: You can press CTRL + C to copy the contents of this message!");
+                                tsk.Dispose();
                             });
                 }
                 else

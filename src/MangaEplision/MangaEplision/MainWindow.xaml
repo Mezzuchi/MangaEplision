@@ -42,12 +42,17 @@
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="300*"/>
                                     </Grid.RowDefinitions>
-                                    <ListBox Background="Transparent" Name="CatalogListBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                                    <ListBox VirtualizingStackPanel.VirtualizationMode="Recycling" Background="Transparent" Name="CatalogListBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" ScrollViewer.VerticalScrollBarVisibility="Visible">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <ContentPresenter Content="{Binding}"/>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
                                     </ListBox>
                                 </Grid>
                             </metro:MetroGroupBox>
@@ -65,7 +70,7 @@
             </metro:MetroTabItem>
             <metro:MetroTabItem Header="Collection">
                 <Grid>
-                    <ListView Name="CollectionListView" ItemsSource="{Binding me:Global.BookCollection,NotifyOnSourceUpdated=True}" FontSize="14" MouseDoubleClick="CollectionListView_MouseDoubleClick">
+                    <ListView VirtualizingStackPanel.VirtualizationMode="Recycling" Name="CollectionListView" ItemsSource="{Binding me:Global.BookCollection,NotifyOnSourceUpdated=True}" FontSize="14" MouseDoubleClick="CollectionListView_MouseDoubleClick">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="400"/>
@@ -73,6 +78,11 @@
                                 <GridViewColumn Header="Release Date" DisplayMemberBinding="{Binding ReleaseDate}"/>
                             </GridView>
                         </ListView.View>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
                     </ListView>
                 </Grid>
             </metro:MetroTabItem>
@@ -81,7 +91,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <ListView Grid.Column="0" Name="DlQueueList" FontSize="14">
+                    <ListView Grid.Column="0" Name="DlQueueList" FontSize="14" VirtualizingStackPanel.VirtualizationMode="Recycling">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Name" Width="400" DisplayMemberBinding="{Binding Name}" />
@@ -89,6 +99,11 @@
                                 <GridViewColumn Header="Queue Date" Width="224" DisplayMemberBinding="{Binding Date}" />
                             </GridView>
                         </ListView.View>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
                     </ListView>
                 </Grid>
             </metro:MetroTabItem>
