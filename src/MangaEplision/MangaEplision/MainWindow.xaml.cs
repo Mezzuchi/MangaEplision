@@ -51,6 +51,8 @@ namespace MangaEplision
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            
+
             if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
             {
                 //if Win7
@@ -62,7 +64,9 @@ namespace MangaEplision
                 {
                     #region
                     System.Threading.Thread.Sleep(100);
+
                     Global.Initialize();
+
                     Dispatcher.Invoke(
                         new EmptyDelegate(
                         () =>
@@ -134,6 +138,7 @@ namespace MangaEplision
 
                                         LatestReleaseGB.NotificationsCount = metroBanner.Slides.Count;
                                     }));
+                              
                             }
                         });
 
@@ -303,6 +308,9 @@ namespace MangaEplision
                                     this.TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
                                     this.TaskbarItemInfo.ProgressValue = 0;
                                 }
+
+
+                                GlobalObjs.SoundManager.WindowsBalloon.Play();
                             }));
                         }, (curr, total) =>
                         {

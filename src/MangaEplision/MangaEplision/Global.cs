@@ -44,7 +44,7 @@ namespace MangaEplision
                 Directory.CreateDirectory(QueueDir);
             CachedManga = new List<Manga>();
 
-            
+            MangaEplision.GlobalObjs.SoundManager.Initialize();
 
             LoadCachedManga();
             fswatch = new FileSystemWatcher(CollectionDir);
@@ -112,6 +112,8 @@ namespace MangaEplision
                 LoadCatalog(true);
             }
         }
+
+
         public static Manga GetMangaInfo(string name)
         {
             var first = CachedManga.Find((m) => m.MangaName.ToLower() == name.ToLower());

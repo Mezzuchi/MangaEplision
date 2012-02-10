@@ -158,7 +158,8 @@ namespace MangaEplision
         }
         ~MangaReaderWin()
         {
-            this.DataContext = null;
+            Dispatcher.Invoke(new EmptyDelegate(() =>
+                this.DataContext = null));
             //GC.Collect();
         }
     }

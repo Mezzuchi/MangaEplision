@@ -21,7 +21,6 @@
     <Grid>
         <Grid Panel.ZIndex="70">
             <mitsu:Book x:Name="BookControl" Height="Auto" Width="Auto" ItemsSource="{Binding Path=PageLocalUrls,Converter={StaticResource ImageByteToBookPageConverter1}}">
-
             </mitsu:Book>
         </Grid>
         <Grid x:Name="Ctrlgrid" Height="54" VerticalAlignment="Bottom" Panel.ZIndex="100" Margin="69,0,72,0" Background="Gray" Opacity="75" Width="{Binding ElementName=this, Path=ActualWidth, Converter={StaticResource PerConv}, ConverterParameter='0.7'}">
