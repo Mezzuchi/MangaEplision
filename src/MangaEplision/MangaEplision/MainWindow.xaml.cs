@@ -18,6 +18,7 @@ using MangaEplision.Base;
 using System.Windows.Threading;
 using WinInterop = System.Windows.Interop;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace MangaEplision
 {
@@ -49,7 +50,7 @@ namespace MangaEplision
             if (metroBanner.Visibility == System.Windows.Visibility.Collapsed)
                 CatalogListBox.Height = (this.Height - ((this.Height - metroTabControl1.ActualHeight) - LatestReleaseGB.FontSize)) - DashboardTab.ActualHeight * 3;
             else if (metroBanner.Visibility == System.Windows.Visibility.Visible)
-            CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2 - metroBanner.ActualHeight - LatestReleaseGB.FontSize;
+                CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2 - metroBanner.ActualHeight - LatestReleaseGB.FontSize;
         }
 
 
@@ -110,24 +111,25 @@ namespace MangaEplision
                             {
                                 foreach (BookEntry be in Global.MangaSource.GetNewReleasesOfToday(3))
                                 {
+
                                     Dispatcher.BeginInvoke(new EmptyDelegate(
                                         () =>
                                         {
+                                            var bitmp = new BitmapImage();
+
+                                            bitmp.BeginInit();
+                                            bitmp.CacheOption = BitmapCacheOption.Default;
+
+
+                                            bitmp.UriSource = new Uri(be.ParentManga.BookImageUrl);
+                                            bitmp.EndInit();
+
+                                            //bitmp.Freeze();
                                             var slide = new MetroBannerSlide();
                                             slide.Header = be.Name + " / " + be.ParentManga.MangaName;
 
-                                            var bitmp = new BitmapImage(new Uri(be.ParentManga.BookImageUrl));
+                                            slide.Image = bitmp;
 
-                                            EventHandler ha = null;
-                                            ha = new EventHandler((a, b) =>
-                                             {
-                                                 bitmp.DownloadCompleted -= ha;
-                                                 bitmp.Freeze();
-                                                 slide.Image = bitmp;
-                                                 
-                                             });
-                                            bitmp.DownloadCompleted += ha;
-                                            
                                             slide.FontSize = 25;
                                             slide.Foreground = Brushes.Red;
                                             slide.FontStyle = FontStyles.Oblique;
@@ -139,7 +141,7 @@ namespace MangaEplision
                                     {
                                         metroBanner.Slide = metroBanner.Slides[0];
                                         metroBanner.Start();
-                                        
+
 
                                         LatestReleaseGB.NotificationsCount = metroBanner.Slides.Count;
                                     }));

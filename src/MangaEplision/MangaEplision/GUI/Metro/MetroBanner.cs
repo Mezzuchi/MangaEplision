@@ -147,8 +147,9 @@ namespace MangaEplision.Metro
 
                 CurrentIndex += 1;
                 //Slide = Slides[CurrentIndex];
+                //Slide = Slides[CurrentIndex];
                 if (Slide.Opacity == 0.0)
-                Slide.FadeIn();
+                    Slide.FadeIn();
             }
             else if (Slides.Count == (CurrentIndex + 1))
             {
