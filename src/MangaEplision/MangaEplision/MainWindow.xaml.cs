@@ -335,9 +335,16 @@ namespace MangaEplision
             var sw = new SearchWindow();
             sw.Show();
         }
-        internal void InvokeReadManga(Manga m, Book b)
+        internal void InvokeReadManga(Manga m)
         {
+            MetroTabItem mti = new MetroTabItem();
+            mti.IsClosable = true;
+            mti.Header = m.MangaName;
+            mti.Content = new MangaInfoControl(m);
 
+            metroTabControl1.Items.Add(mti);
+
+            metroTabControl1.SelectedItem = mti;
         }
         private void searchTile_MouseEnter(object sender, MouseEventArgs e)
         {

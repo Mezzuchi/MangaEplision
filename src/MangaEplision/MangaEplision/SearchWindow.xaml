@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:metro="clr-namespace:MangaEplision.Metro"
         xmlns:me="clr-namespace:MangaEplision"
-        Title="SearchWindow" Height="600" Width="600" WindowStartupLocation="CenterScreen">
+        Title="Search" Height="300" Width="600" WindowStartupLocation="CenterScreen" Icon="pack://application:,,,/Resources/appicon.png" ResizeMode="CanMinimize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -25,8 +25,8 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="100" />
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Name="SearchTerm" />
-                <Button Name="Submit" Content="Search" Grid.Column="1" />
+                <TextBox TabIndex="0" Grid.Column="0" Name="SearchTerm" KeyDown="SearchTerm_KeyDown" />
+                <Button Name="Submit" Content="Search" Grid.Column="1"  Click="Submit_Click" />
             </Grid>
         </Grid>
         <ListBox Background="Transparent" Name="CatalogListBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
