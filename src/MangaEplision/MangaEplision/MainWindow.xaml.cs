@@ -48,7 +48,7 @@ namespace MangaEplision
         {
             if (metroBanner.Visibility == System.Windows.Visibility.Collapsed)
                 CatalogListBox.Height = (this.Height - ((this.Height - metroTabControl1.ActualHeight) - LatestReleaseGB.FontSize)) - DashboardTab.ActualHeight * 3;
-            else if (metroBanner.Visibility == System.Windows.Visibility.Visible) ;
+            else if (metroBanner.Visibility == System.Windows.Visibility.Visible)
             CatalogListBox.Height = (this.Height - (this.Height - metroTabControl1.ActualHeight)) - DashboardTab.ActualHeight * 2 - metroBanner.ActualHeight - LatestReleaseGB.FontSize;
         }
 
