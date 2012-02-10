@@ -40,6 +40,7 @@ namespace MangaEplision.Base
                         bi.BeginInit();
                         bi.StreamSource = HttpWebRequest.Create(BookImageUrl).GetResponse().GetResponseStream();
                         bi.EndInit();
+                        bi.Freeze();
                         _imgcache = bi;
                         BookImageFld = bi;
                     }

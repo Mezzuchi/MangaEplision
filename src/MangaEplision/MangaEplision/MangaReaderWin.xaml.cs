@@ -152,6 +152,7 @@ namespace MangaEplision
         }
         ~MangaReaderWin()
         {
+            this.DataContext = null;
             //GC.Collect();
         }
     }
