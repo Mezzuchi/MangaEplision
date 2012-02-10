@@ -38,9 +38,16 @@ namespace MangaEplision.Base
                     {
                         System.Windows.Media.Imaging.BitmapImage bi = new System.Windows.Media.Imaging.BitmapImage();
                         bi.BeginInit();
-                        bi.StreamSource = HttpWebRequest.Create(BookImageUrl).GetResponse().GetResponseStream();
+
+                        var res = HttpWebRequest.Create(BookImageUrl).GetResponse();
+                        var str =  res.GetResponseStream();
+                        bi.StreamSource = str;
                         bi.EndInit();
                         bi.Freeze();
+
+                        str.Close();
+                        str.Dispose();
+
                         _imgcache = bi;
                         BookImageFld = bi;
                     }
