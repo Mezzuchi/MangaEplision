@@ -64,22 +64,7 @@ namespace MangaEplision.Metro
 
         void MetroBanner_Unloaded(object sender, RoutedEventArgs e)
         {
-            this.Unloaded -= new RoutedEventHandler(MetroBanner_Unloaded);
-            this.Loaded -= new RoutedEventHandler(MetroBanner_Loaded);
 
-            slideshow_prog.Stop();
-            slideshow_prog.Elapsed -= new ElapsedEventHandler(slideshow_prog_Elapsed);
-
-            slideshow_prog.Dispose();
-
-
-            slideshow.Stop();
-            slideshow.Elapsed -= new ElapsedEventHandler(slideshow_Elapsed);
-
-            slideshow.Dispose();
-
-            MetroCircleButton nextbutton = this.Template.FindName("PART_NextButton", this) as MetroCircleButton;
-            nextbutton.Click -= new RoutedEventHandler(NextButtonClick);
         }
 
         void MetroBanner_Loaded(object sender, RoutedEventArgs e)
@@ -94,17 +79,33 @@ namespace MangaEplision.Metro
             
             slideshow.Elapsed += new ElapsedEventHandler(slideshow_Elapsed);
             slideshow.Interval = 7000; //7 seconds
-            //slideshow.Start();
+
+            if (!slideshow.Enabled)
+                slideshow.Start();
+            else
+            {
+                slideshow.Stop();
+            }
 
             slideshow_prog.Elapsed += new ElapsedEventHandler(slideshow_prog_Elapsed);
             slideshow_prog.Interval = 1000;
-            //slideshow_prog.Start();
+
+            if (!slideshow_prog.Enabled)
+                slideshow_prog.Start();
+            else
+                slideshow.Stop();
 
             progbar.Maximum = 7;
             progbar.Value = 7;
 
             MetroCircleButton nextbutton = this.Template.FindName("PART_NextButton",this) as MetroCircleButton;
             nextbutton.Click += new RoutedEventHandler(NextButtonClick);
+
+            if (!slideshow.Enabled && !slideshow_prog.Enabled)
+            {
+                slideshow.Start();
+                slideshow_prog.Start();
+            }
         }
 
         void slideshow_prog_Elapsed(object sender, ElapsedEventArgs e)
