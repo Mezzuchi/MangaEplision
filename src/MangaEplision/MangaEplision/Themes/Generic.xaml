@@ -458,7 +458,7 @@
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BitmapEffect">
             <Setter.Value>
-                <DropShadowBitmapEffect Color="Black" ShadowDepth="2"/>
+                <DropShadowBitmapEffect Color="Black" ShadowDepth="2" Softness="1" Opacity="0.5"/>
             </Setter.Value>
         </Setter>
         <Setter Property="Template">
