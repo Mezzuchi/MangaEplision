@@ -126,7 +126,11 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Label Name="QueueStatuslbl" Content="Your queue is empty." Grid.Column="0"  Grid.ColumnSpan="2"/>
-                <metro:MetroProgressBar x:Name="CurrProg" Grid.Column="2"  Height="20"/>
+                <StackPanel Orientation="Vertical" Grid.Column="2">
+                    <metro:MetroProgressBar x:Name="CurrProg" Height="10"/>
+                    <metro:MetroProgressBar x:Name="MaxProg" Height="10" Foreground="#66FF00"/>
+                </StackPanel>
+                
                 <Label Name="Count" Grid.Column="2"  Content="0%" Margin="127,0,0,0" />
             </Grid>
         </Grid>

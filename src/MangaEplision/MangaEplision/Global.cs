@@ -180,7 +180,9 @@ namespace MangaEplision
                             BinaryFormatter bf = new BinaryFormatter();
                             Book b = (Book)bf.Deserialize(fs);
                             b.Filename = e.FullPath;
-                            CollectionBooks.Add(b);
+
+                            Application.Current.Dispatcher.Invoke(new EmptyDelegate(() =>
+                                CollectionBooks.Add(b)));
                         }
                         catch (Exception)
                         {

@@ -28,6 +28,19 @@ namespace MangaEplision
 
             this.DataContext = info;
             //Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            this.Loaded += new RoutedEventHandler(MangaInfoControl_Loaded);
+            this.Unloaded += new RoutedEventHandler(MangaInfoControl_Unloaded);
+        }
+
+        void MangaInfoControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.Loaded -= new RoutedEventHandler(MangaInfoControl_Loaded);
+            this.Unloaded -= new RoutedEventHandler(MangaInfoControl_Unloaded);
+        }
+
+        void MangaInfoControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            
         }
 
         private void downloadTile_Click(object sender, RoutedEventArgs e)
@@ -40,16 +53,26 @@ namespace MangaEplision
                 {
                     for (int i = 0; i < BooksLsView.SelectedItems.Count; i++)
                     {
-                        ((MainWindow)Application.Current.MainWindow).AddToQueue((BookEntry)BooksLsView.SelectedItems[i], (MangaEplision.Base.Manga)this.DataContext);
+                        if (!Global.GetBookExist((MangaEplision.Base.Manga)this.DataContext, (BookEntry)BooksLsView.SelectedItems[i]))
+                        {
+                            ((MainWindow)Application.Current.MainWindow).AddToQueue((BookEntry)BooksLsView.SelectedItems[i], (MangaEplision.Base.Manga)this.DataContext);
+                        }
                     }
                     if (!((MainWindow)Application.Current.MainWindow).QueueRunning)
                         ((MainWindow)Application.Current.MainWindow).CallStartQueueProcess();
                 }
                 else
                 {
-                    ((MainWindow)Application.Current.MainWindow).AddToQueue((BookEntry)BooksLsView.SelectedItem, (MangaEplision.Base.Manga)this.DataContext);
-                    if(!((MainWindow)Application.Current.MainWindow).QueueRunning)
-                        ((MainWindow)Application.Current.MainWindow).CallStartQueueProcess();
+                    if (!Global.GetBookExist((MangaEplision.Base.Manga)this.DataContext, (BookEntry)BooksLsView.SelectedItem))
+                    {
+                        ((MainWindow)Application.Current.MainWindow).AddToQueue((BookEntry)BooksLsView.SelectedItem, (MangaEplision.Base.Manga)this.DataContext);
+                        if (!((MainWindow)Application.Current.MainWindow).QueueRunning)
+                            ((MainWindow)Application.Current.MainWindow).CallStartQueueProcess();
+                    }
+                    else
+                    {
+                        MessageBox.Show("You already have this book!");
+                    }
                 }
                 ((MainWindow)Application.Current.MainWindow).metroTabControl1.SelectedIndex = 2;
             }
@@ -57,9 +80,16 @@ namespace MangaEplision
 
         private void BooksLsView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow).AddToQueue((BookEntry)BooksLsView.SelectedItem, (MangaEplision.Base.Manga)this.DataContext);
-            if (!((MainWindow)Application.Current.MainWindow).QueueRunning)
-                ((MainWindow)Application.Current.MainWindow).CallStartQueueProcess();
+            if (!Global.GetBookExist((MangaEplision.Base.Manga)this.DataContext, (BookEntry)BooksLsView.SelectedItem))
+            {
+                ((MainWindow)Application.Current.MainWindow).AddToQueue((BookEntry)BooksLsView.SelectedItem, (MangaEplision.Base.Manga)this.DataContext);
+                if (!((MainWindow)Application.Current.MainWindow).QueueRunning)
+                    ((MainWindow)Application.Current.MainWindow).CallStartQueueProcess();
+            }
+            else
+            {
+                MessageBox.Show("You already have this book!");
+            }
         }
     }
 }

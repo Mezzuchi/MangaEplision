@@ -14,7 +14,6 @@ using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 using System.Timers;
-using System.Threading;
 
 namespace MangaEplision.Metro
 {
@@ -53,8 +52,8 @@ namespace MangaEplision.Metro
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MetroBanner), new FrameworkPropertyMetadata(typeof(MetroBanner)));
         }
-        private System.Timers.Timer slideshow = new System.Timers.Timer();
-        private System.Timers.Timer slideshow_prog = new System.Timers.Timer();
+        private Timer slideshow = new Timer();
+        private Timer slideshow_prog = new Timer();
         private MetroProgressBar progbar = null;
         public MetroBanner()
         {
@@ -64,7 +63,22 @@ namespace MangaEplision.Metro
 
         void MetroBanner_Unloaded(object sender, RoutedEventArgs e)
         {
+            this.Unloaded -= new RoutedEventHandler(MetroBanner_Unloaded);
+            this.Loaded -= new RoutedEventHandler(MetroBanner_Loaded);
 
+            slideshow_prog.Stop();
+            slideshow_prog.Elapsed -= new ElapsedEventHandler(slideshow_prog_Elapsed);
+
+            slideshow_prog.Dispose();
+
+
+            slideshow.Stop();
+            slideshow.Elapsed -= new ElapsedEventHandler(slideshow_Elapsed);
+
+            slideshow.Dispose();
+
+            MetroCircleButton nextbutton = this.Template.FindName("PART_NextButton", this) as MetroCircleButton;
+            nextbutton.Click -= new RoutedEventHandler(NextButtonClick);
         }
 
         void MetroBanner_Loaded(object sender, RoutedEventArgs e)
@@ -79,48 +93,31 @@ namespace MangaEplision.Metro
             
             slideshow.Elapsed += new ElapsedEventHandler(slideshow_Elapsed);
             slideshow.Interval = 7000; //7 seconds
-
-            if (!slideshow.Enabled)
-                slideshow.Start();
-            else
-            {
-                slideshow.Stop();
-            }
+            //slideshow.Start();
 
             slideshow_prog.Elapsed += new ElapsedEventHandler(slideshow_prog_Elapsed);
             slideshow_prog.Interval = 1000;
-
-            if (!slideshow_prog.Enabled)
-                slideshow_prog.Start();
-            else
-                slideshow.Stop();
+            //slideshow_prog.Start();
 
             progbar.Maximum = 7;
             progbar.Value = 7;
 
             MetroCircleButton nextbutton = this.Template.FindName("PART_NextButton",this) as MetroCircleButton;
             nextbutton.Click += new RoutedEventHandler(NextButtonClick);
-
-            if (!slideshow.Enabled && !slideshow_prog.Enabled)
-            {
-                slideshow.Start();
-                slideshow_prog.Start();
-            }
         }
 
         void slideshow_prog_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.Dispatcher.BeginInvoke(new EmptyDelegate(() => progbar.Value -= 1));
+            this.Dispatcher.Invoke(new EmptyDelegate(() => progbar.Value -= 1));
         }
 
         void slideshow_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.Dispatcher.BeginInvoke(new EmptyDelegate(delegate()
+            this.Dispatcher.Invoke(new EmptyDelegate(delegate()
             {
                 NextSlide();
                 progbar.Maximum = 7;
                 progbar.Value = 7;
-                Thread.Sleep(50);
             }));
         }
         private delegate void EmptyDelegate();
@@ -148,9 +145,8 @@ namespace MangaEplision.Metro
 
                 CurrentIndex += 1;
                 //Slide = Slides[CurrentIndex];
-                //Slide = Slides[CurrentIndex];
                 if (Slide.Opacity == 0.0)
-                    Slide.FadeIn();
+                Slide.FadeIn();
             }
             else if (Slides.Count == (CurrentIndex + 1))
             {

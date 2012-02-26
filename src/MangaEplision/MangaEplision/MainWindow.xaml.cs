@@ -26,7 +26,7 @@ namespace MangaEplision
             this.SizeChanged += new SizeChangedEventHandler(MainWindow_SizeChanged);
             this.CatalogListBox.MouseDoubleClick += new MouseButtonEventHandler(CatalogListBox_MouseDoubleClick);
             DlQueue = new List<QueueItem>();
-            
+
         }
 
         void CatalogListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -51,7 +51,7 @@ namespace MangaEplision
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
 
             if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
             {
@@ -138,7 +138,7 @@ namespace MangaEplision
 
                                         LatestReleaseGB.NotificationsCount = metroBanner.Slides.Count;
                                     }));
-                              
+
                             }
                         });
 
@@ -270,6 +270,14 @@ namespace MangaEplision
             var queueRunner = System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
                 int i = 0;
+
+                Dispatcher.Invoke(new EmptyDelegate(
+                           () =>
+                           {
+                               MaxProg.Maximum = DlQueue.Count;
+                           }));
+
+
                 while (DlQueue.Count > 0)
                 {
                     isQueueRunning = true;
@@ -279,6 +287,7 @@ namespace MangaEplision
                         return;
                     else
                     {
+
                         q.Downloading = true;
                         q.Status = QueueStatus.Downloading;
                         Dispatcher.Invoke(new QueueUpDelegate((qi) =>
@@ -309,6 +318,11 @@ namespace MangaEplision
                                     this.TaskbarItemInfo.ProgressValue = 0;
                                 }
 
+                                Dispatcher.Invoke(new EmptyDelegate(
+                            () =>
+                            {
+                                MaxProg.Value += 1;
+                            }));
 
                                 GlobalObjs.SoundManager.WindowsBalloon.Play();
                             }));
@@ -328,12 +342,18 @@ namespace MangaEplision
                                 }
                             }), curr, total);
                         });
-                        while (q.Downloading)
-                            System.Threading.Thread.Sleep(30000);
+                        while (q.Downloading && DlQueue.Count > 0)
+                            System.Threading.Thread.Sleep(25000);
                     }
                 }
                 QueueRunning = false;
                 Global.DisplayNotification("Your queue has been emptied!", "Empty Queue!");
+                Dispatcher.Invoke(new EmptyDelegate(
+                           () =>
+                           {
+                               MaxProg.Value = 0;
+                           }));
+
             });
         }
         #endregion
@@ -365,6 +385,6 @@ namespace MangaEplision
             Iw.ShowDialog();
         }
 
-        
+
     }
 }
