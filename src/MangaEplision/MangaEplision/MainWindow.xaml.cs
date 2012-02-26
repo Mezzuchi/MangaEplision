@@ -359,6 +359,12 @@ namespace MangaEplision
 
         }
 
+        private void ImportTile_Click(object sender, RoutedEventArgs e)
+        {
+            var Iw = new ImportWindow();
+            Iw.ShowDialog();
+        }
+
         
     }
 }

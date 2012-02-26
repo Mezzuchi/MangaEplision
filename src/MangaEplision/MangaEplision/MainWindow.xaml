@@ -64,7 +64,7 @@
                         <TextBox Height="23" HorizontalAlignment="Left" Margin="31,167,0,0" Name="textBox1" VerticalAlignment="Top" Width="104" />
                         <metro:MetroTile HorizontalAlignment="Left" Margin="21,139,0,0" x:Name="searchTile" VerticalAlignment="Top" Height="95" Width="123" IsNumbersEnabled="False" Header="Search" Background="Red" Click="searchTile_Click"/>
                         <metro:MetroTile Height="95" HorizontalAlignment="Left" Margin="21,266,0,0" x:Name="refreshTile" VerticalAlignment="Top" Width="123" IsNumbersEnabled="False" Header="Refresh" Background="Orange"/>
-
+                        <metro:MetroTile Height="95" HorizontalAlignment="Left" Margin="21,389,0,0" x:Name="ImportTile" VerticalAlignment="Top" Width="123" IsNumbersEnabled="False" Header="Import" Background="Green" Click="ImportTile_Click"/>
                     </Grid>
                 </Grid>
             </metro:MetroTabItem>
